@@ -1,4 +1,8 @@
 {
     "city_list_title": "城市名录",
-    "loading": "加载中..."
+    "loading": "加载中...",
+    "weather_load_failed": "发生错误，请稍后再试...",
+    "temperature":"{temperature}°C",
+    "feel_like":"感觉像{temperature}°C",
+    "next_7_day_forecast": "未来7天天气预报"
 }

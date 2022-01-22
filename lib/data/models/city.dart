@@ -1,5 +1,6 @@
 import 'package:equatable/equatable.dart';
 import 'package:json_annotation/json_annotation.dart';
+import 'package:weather_app/utils/convert_helper.dart';
 
 part 'city.g.dart';
 
@@ -7,7 +8,11 @@ part 'city.g.dart';
 class City extends Equatable {
   final String city;
 
-  final String lat, lng;
+  @JsonKey(fromJson: stringToDouble, toJson: doubleToString)
+  final double lat;
+
+  @JsonKey(fromJson: stringToDouble, toJson: doubleToString)
+  final double lng;
 
   const City({
     required this.city,

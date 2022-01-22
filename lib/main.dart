@@ -2,11 +2,13 @@ import 'dart:async';
 
 import 'package:dio/dio.dart';
 import 'package:equatable/equatable.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_i18n/flutter_i18n.dart';
 import 'package:flutter_i18n/loaders/decoders/json_decode_strategy.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:logger/logger.dart';
 import 'package:weather_app/constants/misc_constants.dart';
 import 'package:weather_app/cubits/city/city_list_cubit.dart';
 import 'package:weather_app/cubits/commons/languages/language_cubit.dart';
@@ -27,6 +29,7 @@ Future<void> main() async {
 
       FlutterError.onError = (details) => {
             //TODO handle flutter error
+            Logger().e(details)
           };
 
       _registerDependencies();
@@ -41,6 +44,7 @@ Future<void> main() async {
       );
     },
     (error, stack) => {
+      Logger().e(error, stack)
       //TODO handle other error
     },
   );
@@ -51,7 +55,17 @@ void _registerDependencies() {
 
   getIt.registerLazySingleton<I18nService>(() => I18nService());
 
-  getIt.registerLazySingleton<OpenWeatherRestClient>(() => OpenWeatherRestClient(Dio()));
+  const _enableApiLog = !kReleaseMode;
+
+  final _dio = Dio();
+  _dio.interceptors.add(
+    LogInterceptor(
+      responseBody: _enableApiLog,
+      requestBody: _enableApiLog,
+    ),
+  );
+
+  getIt.registerLazySingleton<OpenWeatherRestClient>(() => OpenWeatherRestClient(_dio));
 }
 
 class App extends StatefulWidget {

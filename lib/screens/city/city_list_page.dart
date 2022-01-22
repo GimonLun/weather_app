@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:weather_app/cubits/city/city_list_cubit.dart';
-import 'package:weather_app/screens/city/city_details_page.dart';
+import 'package:weather_app/screens/weather_details_page.dart';
 import 'package:weather_app/service_locator.dart';
 import 'package:weather_app/services/i18n_service.dart';
 
@@ -50,8 +50,8 @@ class _CityListPageState extends State<CityListPage> {
                 title: Text(_item.city),
                 onTap: () {
                   Navigator.of(context).pushNamed(
-                    CityDetailsPage.routeName,
-                    arguments: CityDetailsArg(citySelected: _item),
+                    WeatherDetailsPage.routeName,
+                    arguments: WeatherDetailsArg(citySelected: _item),
                   );
                 },
               );

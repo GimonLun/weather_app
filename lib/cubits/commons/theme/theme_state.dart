@@ -113,6 +113,7 @@ class ColorTheme {
 
 TextTheme _createTextThemeFromTemplate(
   ColorTheme colorTheme, {
+  TextStyle? headline1,
   TextStyle? headline2,
   TextStyle? headline3,
   TextStyle? headline4,
@@ -127,6 +128,12 @@ TextTheme _createTextThemeFromTemplate(
   TextStyle? overline,
 }) {
   return TextTheme(
+    headline1: headline1 ??
+        TextStyle(
+          fontSize: headline1FontSize,
+          fontWeight: headline1FontWeight,
+          color: colorTheme.onBackgroundColor,
+        ),
     headline2: headline2 ??
         TextStyle(
           fontSize: headline2FontSize,
@@ -240,11 +247,18 @@ ThemeData _createThemeDataFromTemplate({
             primary: colorTheme.onBackgroundColor.withOpacity(opacityMed),
           ),
         ),
+    cardTheme: CardTheme(
+      elevation: defaultCardElevation,
+      color: Colors.white,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(defaultRadius),
+      ),
+    ),
     dividerTheme: dividerThemeData ??
         DividerThemeData(
           space: defaultDividerSpace,
           thickness: defaultDividerThickness,
-          color: colorTheme.onBackgroundColor.withOpacity(opacityLow),
+          color: colorTheme.onBackgroundColor.withOpacity(opacityMin),
         ),
     textTheme: textTheme,
     colorScheme: colorScheme,

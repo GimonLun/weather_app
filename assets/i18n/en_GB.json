@@ -1,4 +1,8 @@
 {
     "city_list_title": "City List",
-    "loading": "loading..."
+    "loading": "loading...",
+    "weather_load_failed": "Something went wrong, please try again later...",
+    "temperature":"{temperature}°C",
+    "feel_like":"Feels like {temperature}°C",
+    "next_7_day_forecast": "Next 7 days weather forecast"
 }
