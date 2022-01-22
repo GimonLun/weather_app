@@ -1,24 +1,20 @@
 import 'package:equatable/equatable.dart';
 import 'package:json_annotation/json_annotation.dart';
-import 'package:weather_app/data/models/weathers/main.dart';
-import 'package:weather_app/data/models/weathers/summary.dart';
-import 'package:weather_app/data/models/weathers/winds.dart';
+import 'package:weather_app/data/models/weathers/daily.dart';
+import 'package:weather_app/data/models/weathers/hourly.dart';
 
 part 'weather_details_response.g.dart';
 
 @JsonSerializable(explicitToJson: true)
 class WeatherDetailsResponse extends Equatable {
-  final int cod;
-
-  final Main main;
-  final List<Summary> weather;
-  final Winds wind;
+  final Hourly current;
+  final List<Hourly> hourly;
+  final List<Daily> daily;
 
   const WeatherDetailsResponse({
-    required this.cod,
-    required this.main,
-    required this.weather,
-    required this.wind,
+    required this.current,
+    required this.hourly,
+    required this.daily,
   });
 
   factory WeatherDetailsResponse.fromJson(Map<String, dynamic> json) => _$WeatherDetailsResponseFromJson(json);
@@ -27,9 +23,8 @@ class WeatherDetailsResponse extends Equatable {
 
   @override
   List<Object> get props => [
-        cod,
-        main,
-        weather,
-        wind,
+        current,
+        hourly,
+        daily,
       ];
 }

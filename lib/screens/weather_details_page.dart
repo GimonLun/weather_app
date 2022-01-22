@@ -5,7 +5,7 @@ import 'package:weather_app/cubits/commons/theme/theme_cubit.dart';
 import 'package:weather_app/cubits/weather/weather_details_cubit.dart';
 import 'package:weather_app/data/models/city.dart';
 import 'package:weather_app/data/models/weathers/api/response/weather_details_response.dart';
-import 'package:weather_app/data/models/weathers/main.dart';
+import 'package:weather_app/data/models/weathers/hourly.dart';
 import 'package:weather_app/service_locator.dart';
 import 'package:weather_app/services/i18n_service.dart';
 
@@ -79,13 +79,13 @@ class _WeatherDetailsPageState extends State<WeatherDetailsPage> {
                     }
 
                     final _weatherDetailsResponse = weatherDetailsState.weatherDetailsResponse;
-                    final _main = _weatherDetailsResponse!.main;
+                    final _current = _weatherDetailsResponse!.current;
 
                     return Column(
                       crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: [
                         _CityWeatherDetails(
-                          main: _main,
+                          current: _current,
                           citySelected: _citySelected,
                         ),
                         _ExtraDetailSection(detailsResponse: _weatherDetailsResponse)
@@ -104,12 +104,12 @@ class _WeatherDetailsPageState extends State<WeatherDetailsPage> {
 
 class _CityWeatherDetails extends StatelessWidget {
   final I18nService _i18nService;
-  final Main main;
+  final Hourly current;
   final City citySelected;
 
   _CityWeatherDetails({
     Key? key,
-    required this.main,
+    required this.current,
     required this.citySelected,
   })  : _i18nService = getIt.get(),
         super(key: key);
@@ -133,14 +133,14 @@ class _CityWeatherDetails extends StatelessWidget {
                 padding: const EdgeInsets.symmetric(vertical: spaceMid),
                 child: Text(
                   _i18nService.translate(context, 'temperature', translationParams: {
-                    'temperature': main.temp.toString(),
+                    'temperature': current.temp.toString(),
                   }),
                   style: _textTheme.headline1,
                 ),
               ),
               Text(
                 _i18nService.translate(context, 'feel_like', translationParams: {
-                  'temperature': main.feelsLike.toString(),
+                  'temperature': current.feelsLike.toString(),
                 }),
                 style: _textTheme.subtitle2,
               ),
@@ -162,7 +162,7 @@ class _ExtraDetailSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final _summary = detailsResponse.weather.first;
+    final _summary = detailsResponse.current.weather.first;
 
     return Card(
       margin: const EdgeInsets.fromLTRB(screenBoundingSpace, screenBoundingSpace, screenBoundingSpace, 0.0),

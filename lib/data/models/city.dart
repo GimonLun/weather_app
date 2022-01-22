@@ -1,5 +1,6 @@
 import 'package:equatable/equatable.dart';
 import 'package:json_annotation/json_annotation.dart';
+import 'package:weather_app/utils/convert_helper.dart';
 
 part 'city.g.dart';
 
@@ -7,10 +8,10 @@ part 'city.g.dart';
 class City extends Equatable {
   final String city;
 
-  @JsonKey(fromJson: _stringToDouble, toJson: _doubleToString)
+  @JsonKey(fromJson: stringToDouble, toJson: doubleToString)
   final double lat;
 
-  @JsonKey(fromJson: _stringToDouble, toJson: _doubleToString)
+  @JsonKey(fromJson: stringToDouble, toJson: doubleToString)
   final double lng;
 
   const City({
@@ -26,6 +27,3 @@ class City extends Equatable {
   @override
   List<Object> get props => [city, lat, lng];
 }
-
-String _doubleToString(double value) => value.toString();
-double _stringToDouble(String value) => double.tryParse(value) ?? 0.0;

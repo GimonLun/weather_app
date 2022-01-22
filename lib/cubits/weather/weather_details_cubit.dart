@@ -1,6 +1,5 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:weather_app/constants/misc_constants.dart';
 import 'package:weather_app/data/models/city.dart';
 import 'package:weather_app/data/models/weathers/api/response/weather_details_response.dart';
 import 'package:weather_app/repositories/open_weather_rest_client.dart';
@@ -32,10 +31,9 @@ class WeatherDetailsCubit extends Cubit<WeatherDetailsState> {
     emit(const WeatherDetailsLoading());
 
     try {
-      final _detailsResponse = await _openWeatherRestClient.getCurrentWeatherByCoordinates(
+      final _detailsResponse = await _openWeatherRestClient.getWeatherByCoordinates(
         citySelected.lng,
         citySelected.lat,
-        openWeatherApiKey,
       );
 
       emit(WeatherDetailsLoaded(weatherDetailsResponse: _detailsResponse));
