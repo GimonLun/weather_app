@@ -25,6 +25,9 @@ const double defaultDividerSpace = 2.0;
 const double defaultDividerThickness = 0.5;
 
 //text related
+const double headline1FontSize = 52.0;
+const FontWeight headline1FontWeight = FontWeight.bold;
+
 const double headline2FontSize = 38.0;
 const FontWeight headline2FontWeight = FontWeight.bold;
 
