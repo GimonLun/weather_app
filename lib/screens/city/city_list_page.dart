@@ -4,14 +4,16 @@ import 'package:weather_app/cubits/city/city_list_cubit.dart';
 import 'package:weather_app/service_locator.dart';
 import 'package:weather_app/services/i18n_service.dart';
 
-class CityList extends StatefulWidget {
-  const CityList({Key? key}) : super(key: key);
+class CityListPage extends StatefulWidget {
+  static const routeName = 'city_list';
+
+  const CityListPage({Key? key}) : super(key: key);
 
   @override
-  _CityListState createState() => _CityListState();
+  _CityListPageState createState() => _CityListPageState();
 }
 
-class _CityListState extends State<CityList> {
+class _CityListPageState extends State<CityListPage> {
   late I18nService _i18nService;
 
   @override
