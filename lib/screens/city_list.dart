@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:weather_app/cubits/city/city_list_cubit.dart';
 import 'package:weather_app/service_locator.dart';
 import 'package:weather_app/services/i18n_service.dart';
 
@@ -27,8 +29,27 @@ class _CityListState extends State<CityList> {
           _i18nService.translate(context, 'city_list_title'),
         ),
       ),
-      body: const Center(
-        child: Text('empty list now'),
+      body: BlocBuilder<CityListCubit, CityListState>(
+        builder: (context, cityListState) {
+          if (cityListState is CityListLoading) {
+            return Center(
+              child: Text(_i18nService.translate(context, 'loading')),
+            );
+          }
+
+          final _cityList = cityListState.cityList;
+
+          return ListView.builder(
+            itemBuilder: (context, index) {
+              final _item = _cityList.elementAt(index);
+
+              return ListTile(
+                title: Text(_item.city),
+              );
+            },
+            itemCount: _cityList.length,
+          );
+        },
       ),
     );
   }
