@@ -228,7 +228,7 @@ ThemeData _createThemeDataFromTemplate({
           iconTheme: IconThemeData(
             color: colorTheme.backgroundColor,
           ),
-          titleTextStyle: textTheme.headline5!.copyWith(
+          titleTextStyle: textTheme.headline6!.copyWith(
             color: colorTheme.backgroundColor,
           ),
           backgroundColor: colorTheme.primaryColor,
