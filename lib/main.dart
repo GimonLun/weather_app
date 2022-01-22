@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:dio/dio.dart';
 import 'package:equatable/equatable.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_i18n/flutter_i18n.dart';
@@ -51,7 +52,17 @@ void _registerDependencies() {
 
   getIt.registerLazySingleton<I18nService>(() => I18nService());
 
-  getIt.registerLazySingleton<OpenWeatherRestClient>(() => OpenWeatherRestClient(Dio()));
+  const _enableApiLog = !kReleaseMode;
+
+  final _dio = Dio();
+  _dio.interceptors.add(
+    LogInterceptor(
+      responseBody: _enableApiLog,
+      requestBody: _enableApiLog,
+    ),
+  );
+
+  getIt.registerLazySingleton<OpenWeatherRestClient>(() => OpenWeatherRestClient(_dio));
 }
 
 class App extends StatefulWidget {

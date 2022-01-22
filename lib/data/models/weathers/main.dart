@@ -21,10 +21,10 @@ class Main extends Equatable {
   final double humidity;
 
   @JsonKey(name: 'sea_level')
-  final double seaLevel;
+  final double? seaLevel;
 
   @JsonKey(name: 'grnd_level')
-  final double grndLevel;
+  final double? grndLevel;
 
   const Main({
     required this.temp,
@@ -49,7 +49,5 @@ class Main extends Equatable {
         tempMax,
         pressure,
         humidity,
-        seaLevel,
-        grndLevel,
       ];
 }

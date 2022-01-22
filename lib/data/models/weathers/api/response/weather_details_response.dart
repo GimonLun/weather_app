@@ -8,15 +8,13 @@ part 'weather_details_response.g.dart';
 
 @JsonSerializable(explicitToJson: true)
 class WeatherDetailsResponse extends Equatable {
-  final String message;
-  final String cod;
+  final int cod;
 
   final Main main;
   final List<Summary> weather;
   final Winds wind;
 
   const WeatherDetailsResponse({
-    required this.message,
     required this.cod,
     required this.main,
     required this.weather,
@@ -29,7 +27,6 @@ class WeatherDetailsResponse extends Equatable {
 
   @override
   List<Object> get props => [
-        message,
         cod,
         main,
         weather,

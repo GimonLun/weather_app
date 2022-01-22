@@ -41,6 +41,8 @@ class WeatherDetailsCubit extends Cubit<WeatherDetailsState> {
       emit(WeatherDetailsLoaded(weatherDetailsResponse: _detailsResponse));
     } catch (_) {
       emit(const WeatherDetailsLoadFailed());
+
+      rethrow;
     }
   }
 }

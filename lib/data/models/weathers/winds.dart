@@ -5,7 +5,8 @@ part 'winds.g.dart';
 
 @JsonSerializable(explicitToJson: true)
 class Winds extends Equatable {
-  final double speed, gust;
+  final double speed;
+  final double? gust;
 
   final int deg;
 
@@ -22,7 +23,6 @@ class Winds extends Equatable {
   @override
   List<Object> get props => [
         speed,
-        gust,
         deg,
       ];
 }
