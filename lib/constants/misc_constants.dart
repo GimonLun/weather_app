@@ -3,6 +3,7 @@ import 'package:weather_app/data/enums_extensions/enums.dart';
 const Language defaultLanguage = Language.en;
 
 const String openWeatherBaseUrl = 'https://api.openweathermap.org/data/2.5/';
+const String openWeatherIconBaseUrl = 'http://openweathermap.org/img/w/';
 
 /// TODO remove the api key and keep in .env in real life
 /// In real life, we will set all api key and credential value into .env.

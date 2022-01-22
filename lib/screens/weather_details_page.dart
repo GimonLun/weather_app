@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 import 'package:weather_app/constants/dimen_constants.dart';
+import 'package:weather_app/constants/misc_constants.dart';
 import 'package:weather_app/cubits/commons/theme/theme_cubit.dart';
 import 'package:weather_app/cubits/weather/weather_details_cubit.dart';
 import 'package:weather_app/data/models/city.dart';
@@ -50,6 +51,7 @@ class _WeatherDetailsPageState extends State<WeatherDetailsPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
+        bottom: false,
         child: SingleChildScrollView(
           child: BlocProvider(
             create: (context) => _weatherDetailsCubit,
@@ -89,11 +91,13 @@ class _WeatherDetailsPageState extends State<WeatherDetailsPage> {
                           current: _current,
                           citySelected: _citySelected,
                         ),
-                        _ExtraDetailSection(detailsResponse: _weatherDetailsResponse)
+                        _ExtraDetailSection(detailsResponse: _weatherDetailsResponse),
+                        _ForeCastDetailSection(detailsResponse: _weatherDetailsResponse),
                       ],
                     );
                   },
                 ),
+                SafeArea(child: Container())
               ],
             ),
           ),
@@ -129,6 +133,10 @@ class _CityWeatherDetails extends StatelessWidget {
               Text(
                 citySelected.city,
                 style: _textTheme.headline3,
+              ),
+              Image.network(
+                '$openWeatherIconBaseUrl${current.weather.first.icon}.png',
+                scale: 0.4,
               ),
               Padding(
                 padding: const EdgeInsets.symmetric(vertical: spaceMid),
@@ -220,7 +228,7 @@ class _HourTemp extends StatelessWidget {
         children: [
           Text(DateFormat('hh:mma').format(hourly.dateTime)),
           Image.network(
-            'http://openweathermap.org/img/w/${hourly.weather.first.icon}.png',
+            '$openWeatherIconBaseUrl${hourly.weather.first.icon}.png',
           ),
           Text(
             _i18nService.translate(
@@ -232,6 +240,81 @@ class _HourTemp extends StatelessWidget {
             ),
           ),
         ],
+      ),
+    );
+  }
+}
+
+class _ForeCastDetailSection extends StatelessWidget {
+  final I18nService _i18nService;
+
+  final WeatherDetailsResponse detailsResponse;
+
+  _ForeCastDetailSection({
+    Key? key,
+    required this.detailsResponse,
+  })  : _i18nService = getIt.get(),
+        super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    final _daily = detailsResponse.daily;
+
+    return Container(
+      margin: const EdgeInsets.only(top: spaceLarge),
+      child: Card(
+        margin: const EdgeInsets.fromLTRB(screenBoundingSpace, screenBoundingSpace, screenBoundingSpace, 0.0),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: spaceLarge),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: spaceXMid),
+                child: Text(_i18nService.translate(context, 'next_7_day_forecast')),
+              ),
+              const Divider(),
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: spaceXMid),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: _daily.getRange(1, _daily.length).map((daily) {
+                    final _min = _i18nService.translate(
+                      context,
+                      'temperature',
+                      translationParams: {
+                        'temperature': daily.temp.min.toString(),
+                      },
+                    );
+
+                    final _max = _i18nService.translate(
+                      context,
+                      'temperature',
+                      translationParams: {
+                        'temperature': daily.temp.max.toString(),
+                      },
+                    );
+
+                    return Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Row(
+                        children: [
+                          Expanded(
+                            child: Text(
+                              DateFormat('dd MMM yyyy').format(daily.dateTime),
+                            ),
+                          ),
+                          Text('$_min - $_max'),
+                        ],
+                      ),
+                    );
+                  }).toList(),
+                ),
+              ),
+            ],
+          ),
+        ),
       ),
     );
   }
