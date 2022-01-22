@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:dio/dio.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -11,6 +12,7 @@ import 'package:weather_app/cubits/city/city_list_cubit.dart';
 import 'package:weather_app/cubits/commons/languages/language_cubit.dart';
 import 'package:weather_app/cubits/commons/theme/theme_cubit.dart';
 import 'package:weather_app/cubits/cubits.dart';
+import 'package:weather_app/repositories/open_weather_rest_client.dart';
 import 'package:weather_app/screens/city/city_list_page.dart';
 import 'package:weather_app/service_locator.dart';
 import 'package:weather_app/services/i18n_service.dart';
@@ -48,6 +50,8 @@ void _registerDependencies() {
   EquatableConfig.stringify = true;
 
   getIt.registerLazySingleton<I18nService>(() => I18nService());
+
+  getIt.registerLazySingleton<OpenWeatherRestClient>(() => OpenWeatherRestClient(Dio()));
 }
 
 class App extends StatefulWidget {
