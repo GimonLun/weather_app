@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:intl/intl.dart';
 import 'package:weather_app/constants/dimen_constants.dart';
 import 'package:weather_app/cubits/commons/theme/theme_cubit.dart';
 import 'package:weather_app/cubits/weather/weather_details_cubit.dart';
@@ -163,12 +164,14 @@ class _ExtraDetailSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final _summary = detailsResponse.current.weather.first;
+    final _hourly = detailsResponse.hourly;
 
     return Card(
       margin: const EdgeInsets.fromLTRB(screenBoundingSpace, screenBoundingSpace, screenBoundingSpace, 0.0),
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: spaceLarge),
         child: Column(
+          mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Padding(
@@ -178,10 +181,57 @@ class _ExtraDetailSection extends StatelessWidget {
             const Divider(),
             Padding(
               padding: const EdgeInsets.symmetric(vertical: spaceXMid),
-              child: Container(),
-            )
+              child: SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: _hourly
+                      .map(
+                        (hour) => _HourTemp(hourly: hour),
+                      )
+                      .toList(),
+                ),
+              ),
+            ),
           ],
         ),
+      ),
+    );
+  }
+}
+
+class _HourTemp extends StatelessWidget {
+  final I18nService _i18nService;
+
+  final Hourly hourly;
+
+  _HourTemp({
+    Key? key,
+    required this.hourly,
+  })  : _i18nService = getIt.get(),
+        super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.only(right: spaceXMid),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Text(DateFormat('hh:mma').format(hourly.dateTime)),
+          Image.network(
+            'http://openweathermap.org/img/w/${hourly.weather.first.icon}.png',
+          ),
+          Text(
+            _i18nService.translate(
+              context,
+              'temperature',
+              translationParams: {
+                'temperature': hourly.temp.toString(),
+              },
+            ),
+          ),
+        ],
       ),
     );
   }

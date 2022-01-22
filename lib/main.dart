@@ -8,6 +8,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_i18n/flutter_i18n.dart';
 import 'package:flutter_i18n/loaders/decoders/json_decode_strategy.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:logger/logger.dart';
 import 'package:weather_app/constants/misc_constants.dart';
 import 'package:weather_app/cubits/city/city_list_cubit.dart';
 import 'package:weather_app/cubits/commons/languages/language_cubit.dart';
@@ -28,6 +29,7 @@ Future<void> main() async {
 
       FlutterError.onError = (details) => {
             //TODO handle flutter error
+            Logger().e(details)
           };
 
       _registerDependencies();
@@ -42,6 +44,7 @@ Future<void> main() async {
       );
     },
     (error, stack) => {
+      Logger().e(error, stack)
       //TODO handle other error
     },
   );

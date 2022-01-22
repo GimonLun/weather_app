@@ -5,11 +5,12 @@ part 'summary.g.dart';
 
 @JsonSerializable(explicitToJson: true)
 class Summary extends Equatable {
-  final String main, description;
+  final String main, description, icon;
 
   const Summary({
     required this.main,
     required this.description,
+    required this.icon,
   });
 
   String get combineDesc => '$main, $description';
@@ -19,5 +20,5 @@ class Summary extends Equatable {
   Map<String, dynamic> toJson() => _$SummaryToJson(this);
 
   @override
-  List<Object> get props => [main, description];
+  List<Object> get props => [main, description, icon];
 }
