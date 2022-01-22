@@ -5,6 +5,8 @@ import 'package:weather_app/service_locator.dart';
 import 'package:weather_app/services/i18n_service.dart';
 
 class CityListPage extends StatefulWidget {
+  static const routeName = 'city_list';
+
   const CityListPage({Key? key}) : super(key: key);
 
   @override
