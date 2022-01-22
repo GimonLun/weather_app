@@ -49,60 +49,85 @@ class _WeatherDetailsPageState extends State<WeatherDetailsPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: SafeArea(
-        bottom: false,
-        child: SingleChildScrollView(
-          child: BlocProvider(
-            create: (context) => _weatherDetailsCubit,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                Align(
-                  alignment: Alignment.centerLeft,
-                  child: IconButton(
-                    onPressed: () => Navigator.of(context).pop(),
-                    icon: const Icon(
-                      Icons.arrow_back,
-                    ),
+    return BlocBuilder<ThemeCubit, ThemeState>(
+      builder: (context, themeState) {
+        final _textTheme = themeState.themeData.textTheme;
+        final _colorTheme = themeState.colorTheme;
+
+        return Scaffold(
+          body: Container(
+            height: MediaQuery.of(context).size.height,
+            decoration: const BoxDecoration(
+              image: DecorationImage(
+                image: AssetImage("assets/images/bg_1.jpg"),
+                fit: BoxFit.cover,
+              ),
+            ),
+            child: SingleChildScrollView(
+              child: SafeArea(
+                bottom: false,
+                child: BlocProvider(
+                  create: (context) => _weatherDetailsCubit,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      Align(
+                        alignment: Alignment.centerLeft,
+                        child: IconButton(
+                          onPressed: () => Navigator.of(context).pop(),
+                          icon: Icon(
+                            Icons.arrow_back,
+                            color: _colorTheme.onSurfaceColor,
+                          ),
+                        ),
+                      ),
+                      BlocBuilder<WeatherDetailsCubit, WeatherDetailsState>(
+                        builder: (context, weatherDetailsState) {
+                          if (weatherDetailsState is WeatherDetailsLoading) {
+                            return Center(
+                              child: Text(
+                                _i18nService.translate(context, 'loading'),
+                                style: _textTheme.bodyText2!.copyWith(color: _colorTheme.onSurfaceColor),
+                              ),
+                            );
+                          }
+
+                          if (weatherDetailsState is WeatherDetailsLoadFailed) {
+                            return Center(
+                              child: Text(
+                                _i18nService.translate(context, 'weather_load_failed'),
+                                style: _textTheme.bodyText2!.copyWith(color: _colorTheme.onSurfaceColor),
+                              ),
+                            );
+                          }
+
+                          final _weatherDetailsResponse = weatherDetailsState.weatherDetailsResponse;
+                          final _current = _weatherDetailsResponse!.current;
+
+                          return Column(
+                            crossAxisAlignment: CrossAxisAlignment.stretch,
+                            children: [
+                              _CityWeatherDetails(
+                                current: _current,
+                                citySelected: _citySelected,
+                              ),
+                              _ExtraDetailSection(detailsResponse: _weatherDetailsResponse),
+                              _ForeCastDetailSection(detailsResponse: _weatherDetailsResponse),
+                            ],
+                          );
+                        },
+                      ),
+                      const SizedBox(
+                        height: 100.0,
+                      ),
+                    ],
                   ),
                 ),
-                BlocBuilder<WeatherDetailsCubit, WeatherDetailsState>(
-                  builder: (context, weatherDetailsState) {
-                    if (weatherDetailsState is WeatherDetailsLoading) {
-                      return Center(
-                        child: Text(_i18nService.translate(context, 'loading')),
-                      );
-                    }
-
-                    if (weatherDetailsState is WeatherDetailsLoadFailed) {
-                      return Center(
-                        child: Text(_i18nService.translate(context, 'weather_load_failed')),
-                      );
-                    }
-
-                    final _weatherDetailsResponse = weatherDetailsState.weatherDetailsResponse;
-                    final _current = _weatherDetailsResponse!.current;
-
-                    return Column(
-                      crossAxisAlignment: CrossAxisAlignment.stretch,
-                      children: [
-                        _CityWeatherDetails(
-                          current: _current,
-                          citySelected: _citySelected,
-                        ),
-                        _ExtraDetailSection(detailsResponse: _weatherDetailsResponse),
-                        _ForeCastDetailSection(detailsResponse: _weatherDetailsResponse),
-                      ],
-                    );
-                  },
-                ),
-                SafeArea(child: Container())
-              ],
+              ),
             ),
           ),
-        ),
-      ),
+        );
+      },
     );
   }
 }
@@ -124,6 +149,7 @@ class _CityWeatherDetails extends StatelessWidget {
     return BlocBuilder<ThemeCubit, ThemeState>(
       builder: (context, themeState) {
         final _textTheme = themeState.themeData.textTheme;
+        final _colorTheme = themeState.colorTheme;
 
         return Container(
           padding: const EdgeInsets.symmetric(vertical: spaceLarge),
@@ -132,11 +158,13 @@ class _CityWeatherDetails extends StatelessWidget {
             children: [
               Text(
                 citySelected.city,
-                style: _textTheme.headline3,
+                style: _textTheme.headline3!.copyWith(
+                  color: _colorTheme.onSurfaceColor,
+                ),
               ),
               Image.network(
                 '$openWeatherIconBaseUrl${current.weather.first.icon}.png',
-                scale: 0.4,
+                scale: 0.5,
               ),
               Padding(
                 padding: const EdgeInsets.symmetric(vertical: spaceMid),
@@ -144,14 +172,18 @@ class _CityWeatherDetails extends StatelessWidget {
                   _i18nService.translate(context, 'temperature', translationParams: {
                     'temperature': current.temp.toString(),
                   }),
-                  style: _textTheme.headline1,
+                  style: _textTheme.headline1!.copyWith(
+                    color: _colorTheme.onSurfaceColor,
+                  ),
                 ),
               ),
               Text(
                 _i18nService.translate(context, 'feel_like', translationParams: {
                   'temperature': current.feelsLike.toString(),
                 }),
-                style: _textTheme.subtitle2,
+                style: _textTheme.subtitle2!.copyWith(
+                  color: _colorTheme.onSurfaceColor,
+                ),
               ),
             ],
           ),
@@ -174,36 +206,48 @@ class _ExtraDetailSection extends StatelessWidget {
     final _summary = detailsResponse.current.weather.first;
     final _hourly = detailsResponse.hourly;
 
-    return Card(
-      margin: const EdgeInsets.fromLTRB(screenBoundingSpace, screenBoundingSpace, screenBoundingSpace, 0.0),
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: spaceLarge),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Padding(
-              padding: const EdgeInsets.symmetric(vertical: spaceXMid),
-              child: Text(_summary.combineDesc),
-            ),
-            const Divider(),
-            Padding(
-              padding: const EdgeInsets.symmetric(vertical: spaceXMid),
-              child: SingleChildScrollView(
-                scrollDirection: Axis.horizontal,
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: _hourly
-                      .map(
-                        (hour) => _HourTemp(hourly: hour),
-                      )
-                      .toList(),
+    return BlocBuilder<ThemeCubit, ThemeState>(
+      builder: (context, themeState) {
+        final _textTheme = themeState.themeData.textTheme;
+        final _colorTheme = themeState.colorTheme;
+
+        return Card(
+          margin: const EdgeInsets.fromLTRB(screenBoundingSpace, screenBoundingSpace, screenBoundingSpace, 0.0),
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: spaceLarge),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical: spaceXMid),
+                  child: Text(
+                    _summary.combineDesc,
+                    style: _textTheme.bodyText1!.copyWith(
+                      color: _colorTheme.onSurfaceColor,
+                    ),
+                  ),
                 ),
-              ),
+                Divider(color: _colorTheme.onSurfaceColor),
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical: spaceXMid),
+                  child: SingleChildScrollView(
+                    scrollDirection: Axis.horizontal,
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: _hourly
+                          .map(
+                            (hour) => _HourTemp(hourly: hour),
+                          )
+                          .toList(),
+                    ),
+                  ),
+                ),
+              ],
             ),
-          ],
-        ),
-      ),
+          ),
+        );
+      },
     );
   }
 }
@@ -221,26 +265,41 @@ class _HourTemp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.only(right: spaceXMid),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Text(DateFormat('hh:mma').format(hourly.dateTime)),
-          Image.network(
-            '$openWeatherIconBaseUrl${hourly.weather.first.icon}.png',
+    return BlocBuilder<ThemeCubit, ThemeState>(
+      builder: (context, themeState) {
+        final _textTheme = themeState.themeData.textTheme;
+        final _colorTheme = themeState.colorTheme;
+
+        return Padding(
+          padding: const EdgeInsets.only(right: spaceXMid),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(
+                DateFormat('hh:mma').format(hourly.dateTime),
+                style: _textTheme.caption!.copyWith(
+                  color: _colorTheme.onSurfaceColor,
+                ),
+              ),
+              Image.network(
+                '$openWeatherIconBaseUrl${hourly.weather.first.icon}.png',
+              ),
+              Text(
+                _i18nService.translate(
+                  context,
+                  'temperature',
+                  translationParams: {
+                    'temperature': hourly.temp.toString(),
+                  },
+                ),
+                style: _textTheme.caption!.copyWith(
+                  color: _colorTheme.onSurfaceColor,
+                ),
+              ),
+            ],
           ),
-          Text(
-            _i18nService.translate(
-              context,
-              'temperature',
-              translationParams: {
-                'temperature': hourly.temp.toString(),
-              },
-            ),
-          ),
-        ],
-      ),
+        );
+      },
     );
   }
 }
@@ -260,62 +319,84 @@ class _ForeCastDetailSection extends StatelessWidget {
   Widget build(BuildContext context) {
     final _daily = detailsResponse.daily;
 
-    return Container(
-      margin: const EdgeInsets.only(top: spaceLarge),
-      child: Card(
-        margin: const EdgeInsets.fromLTRB(screenBoundingSpace, screenBoundingSpace, screenBoundingSpace, 0.0),
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: spaceLarge),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Padding(
-                padding: const EdgeInsets.symmetric(vertical: spaceXMid),
-                child: Text(_i18nService.translate(context, 'next_7_day_forecast')),
-              ),
-              const Divider(),
-              Padding(
-                padding: const EdgeInsets.symmetric(vertical: spaceXMid),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: _daily.getRange(1, _daily.length).map((daily) {
-                    final _min = _i18nService.translate(
-                      context,
-                      'temperature',
-                      translationParams: {
-                        'temperature': daily.temp.min.toString(),
-                      },
-                    );
+    return BlocBuilder<ThemeCubit, ThemeState>(
+      builder: (context, themeState) {
+        final _textTheme = themeState.themeData.textTheme;
+        final _colorTheme = themeState.colorTheme;
 
-                    final _max = _i18nService.translate(
-                      context,
-                      'temperature',
-                      translationParams: {
-                        'temperature': daily.temp.max.toString(),
-                      },
-                    );
-
-                    return Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Row(
-                        children: [
-                          Expanded(
-                            child: Text(
-                              DateFormat('dd MMM yyyy').format(daily.dateTime),
-                            ),
-                          ),
-                          Text('$_min - $_max'),
-                        ],
+        return Container(
+          margin: const EdgeInsets.only(top: spaceLarge),
+          child: Card(
+            margin: const EdgeInsets.fromLTRB(screenBoundingSpace, screenBoundingSpace, screenBoundingSpace, 0.0),
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: spaceLarge),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: spaceXMid),
+                    child: Text(
+                      _i18nService.translate(context, 'next_7_day_forecast'),
+                      style: _textTheme.subtitle1!.copyWith(
+                        color: _colorTheme.onSurfaceColor,
                       ),
-                    );
-                  }).toList(),
-                ),
+                    ),
+                  ),
+                  Divider(color: _colorTheme.onSurfaceColor),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: spaceXMid),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: _daily.getRange(1, _daily.length).map(
+                        (daily) {
+                          final _min = _i18nService.translate(
+                            context,
+                            'temperature',
+                            translationParams: {
+                              'temperature': daily.temp.min.toString(),
+                            },
+                          );
+
+                          final _max = _i18nService.translate(
+                            context,
+                            'temperature',
+                            translationParams: {
+                              'temperature': daily.temp.max.toString(),
+                            },
+                          );
+
+                          return Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Row(
+                              children: [
+                                Expanded(
+                                  child: Text(
+                                    DateFormat('dd MMM yyyy').format(daily.dateTime),
+                                    style: _textTheme.subtitle2!.copyWith(
+                                      color: _colorTheme.onSurfaceColor,
+                                    ),
+                                  ),
+                                ),
+                                Text(
+                                  '$_min - $_max',
+                                  style: _textTheme.subtitle2!.copyWith(
+                                    color: _colorTheme.onSurfaceColor,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          );
+                        },
+                      ).toList(),
+                    ),
+                  ),
+                ],
               ),
-            ],
+            ),
           ),
-        ),
-      ),
+        );
+      },
     );
   }
 }
