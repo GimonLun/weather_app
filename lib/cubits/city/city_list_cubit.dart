@@ -3,6 +3,7 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:logger/logger.dart';
+import 'package:weather_app/data/models/city.dart';
 
 part 'city_list_state.dart';
 
@@ -17,9 +18,10 @@ class CityListCubit extends Cubit<CityListState> {
   }
 
   Future<void> initCityList() async {
-    //TODO convert json object into class
     final String response = await rootBundle.loadString('assets/cities.json');
-    final data = await json.decode(response);
-    Logger().i(data);
+    final data = await json.decode(response) as List;
+
+    final cityList = data.map((d) => City.fromJson(d));
+    Logger().i(cityList);
   }
 }
