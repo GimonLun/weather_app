@@ -11,7 +11,6 @@ class CityListCubit extends Cubit<CityListState> {
 
   factory CityListCubit.initial({
     CityListState? state,
-    userProfile,
   }) {
     return CityListCubit._(state: state ?? const CityListInitial());
   }

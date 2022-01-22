@@ -7,7 +7,11 @@ part 'city.g.dart';
 class City extends Equatable {
   final String city;
 
-  final String lat, lng;
+  @JsonKey(fromJson: _stringToDouble, toJson: _doubleToString)
+  final double lat;
+
+  @JsonKey(fromJson: _stringToDouble, toJson: _doubleToString)
+  final double lng;
 
   const City({
     required this.city,
@@ -22,3 +26,6 @@ class City extends Equatable {
   @override
   List<Object> get props => [city, lat, lng];
 }
+
+String _doubleToString(double value) => value.toString();
+double _stringToDouble(String value) => double.tryParse(value) ?? 0.0;
