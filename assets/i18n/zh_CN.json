@@ -3,5 +3,7 @@
     "loading": "加载中...",
     "weather_load_failed": "发生错误，请稍后再试...",
     "temperature":"{temperature}°C",
-    "feel_like":"感觉像{temperature}°C"
+    "feel_like":"感觉像{temperature}°C",
+    "max_temp":"最大温度：",
+    "min_temp":"最小温度："
 }

@@ -12,6 +12,8 @@ class Summary extends Equatable {
     required this.description,
   });
 
+  String get combineDesc => '$main, $description';
+
   factory Summary.fromJson(Map<String, dynamic> json) => _$SummaryFromJson(json);
 
   Map<String, dynamic> toJson() => _$SummaryToJson(this);

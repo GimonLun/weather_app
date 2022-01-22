@@ -3,5 +3,7 @@
     "loading": "loading...",
     "weather_load_failed": "Something went wrong, please try again later...",
     "temperature":"{temperature}°C",
-    "feel_like":"Feels like {temperature}°C"
+    "feel_like":"Feels like {temperature}°C",
+    "max_temp":"Max Temperature: ",
+    "min_temp":"Min Temperature: "
 }

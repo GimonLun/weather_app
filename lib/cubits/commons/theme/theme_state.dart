@@ -247,11 +247,18 @@ ThemeData _createThemeDataFromTemplate({
             primary: colorTheme.onBackgroundColor.withOpacity(opacityMed),
           ),
         ),
+    cardTheme: CardTheme(
+      elevation: defaultCardElevation,
+      color: Colors.white,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(defaultRadius),
+      ),
+    ),
     dividerTheme: dividerThemeData ??
         DividerThemeData(
           space: defaultDividerSpace,
           thickness: defaultDividerThickness,
-          color: colorTheme.onBackgroundColor.withOpacity(opacityLow),
+          color: colorTheme.onBackgroundColor.withOpacity(opacityMin),
         ),
     textTheme: textTheme,
     colorScheme: colorScheme,
