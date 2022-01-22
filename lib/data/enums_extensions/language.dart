@@ -6,7 +6,7 @@ extension LanguageExtension on Language {
   Locale get locale {
     switch (this) {
       case Language.cn:
-        return const Locale('zh,CN');
+        return const Locale('zh', 'CN');
       default:
         return const Locale('en', 'GB');
     }
