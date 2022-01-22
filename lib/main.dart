@@ -7,6 +7,7 @@ import 'package:flutter_i18n/loaders/decoders/json_decode_strategy.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:weather_app/constants/keys/widget_keys.dart';
 import 'package:weather_app/constants/misc_constants.dart';
+import 'package:weather_app/cubits/city/city_list_cubit.dart';
 import 'package:weather_app/cubits/commons/languages/language_cubit.dart';
 import 'package:weather_app/cubits/commons/theme/theme_cubit.dart';
 import 'package:weather_app/cubits/cubits.dart';
@@ -46,8 +47,20 @@ void _registerDependencies() {
   getIt.registerLazySingleton<I18nService>(() => I18nService());
 }
 
-class App extends StatelessWidget {
+class App extends StatefulWidget {
   const App({Key? key}) : super(key: key);
+
+  @override
+  State<App> createState() => _AppState();
+}
+
+class _AppState extends State<App> {
+  @override
+  void initState() {
+    super.initState();
+
+    BlocProvider.of<CityListCubit>(context).initCityList();
+  }
 
   @override
   Widget build(BuildContext context) {
