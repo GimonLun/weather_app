@@ -28,8 +28,8 @@ class DefaultThemeState extends ThemeState {
 
   factory DefaultThemeState.initial() {
     const colorTheme = ColorTheme(
-      primaryColor: Color(0xFFE69A5D),
-      primaryVariantColor: Color(0xFFE69A5D),
+      primaryColor: Color(0xFFF39C12),
+      primaryVariantColor: Color(0xFFE67E22),
       secondaryColor: Color(0xFFF4F4F4),
       secondaryVariantColor: Color(0xFFFFEFEF),
       surfaceColor: Colors.white,
@@ -226,14 +226,12 @@ ThemeData _createThemeDataFromTemplate({
           elevation: 0.0,
           centerTitle: true,
           iconTheme: IconThemeData(
-            color: colorTheme.onBackgroundColor,
+            color: colorTheme.backgroundColor,
           ),
-          // textTheme: TextTheme(
-          //   headline5: textTheme.headline5!.copyWith(
-          //     color: colorTheme.onBackgroundColor,
-          //   ),
-          // ),
-          backgroundColor: colorTheme.backgroundColor,
+          titleTextStyle: textTheme.headline5!.copyWith(
+            color: colorTheme.backgroundColor,
+          ),
+          backgroundColor: colorTheme.primaryColor,
         ),
     iconTheme: iconTheme ?? const IconThemeData(size: defaultIconSize),
     textButtonTheme: textButtonTheme ??

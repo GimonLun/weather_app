@@ -14,6 +14,9 @@ class _CityListState extends State<CityList> {
       appBar: AppBar(
         title: const Text('City List'),
       ),
+      body: const Center(
+        child: Text('empty list now'),
+      ),
     );
   }
 }
