@@ -1,5 +1,6 @@
 {
     "add_city": "加上城市",
+    "cancel": "取消",
     "current_location_weather": "当前的位置天气",
     "feel_like": "感觉像{temperature}°C",
     "get_current_location_weather": "获取当前的位置天气",
@@ -8,6 +9,13 @@
     "location_service_disabled_error": "位置服务未启用",
     "logs_history": "日志历史记录",
     "next_7_day_forecast": "未来7天天气预报",
+    "ok": "好",
+    "open_app_settings": "打开应用设置",
+    "permissions": {
+        "location_denied_description": "请允许访问您的位置以获得当前的位置天气。",
+        "location_denied_header": "位置许可否认",
+        "open_app_settings": "打开应用设置"
+    },
     "temperature": "{temperature}°C",
     "view_temperature_by_city": "选择城市以查看温度",
     "weather_load_failed": "发生错误，请稍后再试..."

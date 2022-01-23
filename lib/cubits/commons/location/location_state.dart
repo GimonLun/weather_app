@@ -63,6 +63,7 @@ class LocationLoaded extends LocationState {
 class LocationError extends LocationState {
   final String errorMsg;
   final bool errorNeedTranslate;
+  final permission_handler.PermissionStatus? permissionStatus;
 
   const LocationError({
     required bool serviceEnabled,
@@ -70,6 +71,7 @@ class LocationError extends LocationState {
     required LocationData? locationData,
     required this.errorMsg,
     this.errorNeedTranslate = true,
+    this.permissionStatus,
   }) : super(
           serviceEnabled: serviceEnabled,
           permissionGranted: permissionGranted,
@@ -77,7 +79,7 @@ class LocationError extends LocationState {
         );
 
   @override
-  List<Object?> get props => super.props..addAll([errorMsg, errorNeedTranslate]);
+  List<Object?> get props => super.props..addAll([errorMsg, errorNeedTranslate, permissionStatus]);
 }
 
 class LocationPermissionUpdated extends LocationState {

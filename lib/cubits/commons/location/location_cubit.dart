@@ -1,6 +1,7 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:location/location.dart';
+import 'package:permission_handler/permission_handler.dart' as permission_handler;
 import 'package:weather_app/service_locator.dart';
 
 part 'location_state.dart';
@@ -8,8 +9,11 @@ part 'location_state.dart';
 class LocationCubit extends Cubit<LocationState> {
   final Location _location;
 
+  bool isFirstTimeRequest;
+
   LocationCubit._({
     LocationState? state,
+    this.isFirstTimeRequest = true,
   })  : _location = getIt.isRegistered<Location>() ? getIt.get<Location>() : Location(),
         super(state ?? const LocationInitial());
 
@@ -29,7 +33,11 @@ class LocationCubit extends Cubit<LocationState> {
 
   bool get allPermissionEnabled => state.serviceEnabled && state.permissionGranted;
 
-  Future<void> getUserLocation() async {
+  Future<void> getUserLocation({bool refresh = false}) async {
+    if (!refresh && !isFirstTimeRequest) return;
+
+    isFirstTimeRequest = false;
+
     emit(
       LocationLoading(
         serviceEnabled: state.serviceEnabled,
@@ -54,12 +62,15 @@ class LocationCubit extends Cubit<LocationState> {
 
     final permissionGranted = await _checkAndRequestLocationPermission();
     if (!permissionGranted) {
+      final _updatePermissionStatus = await permission_handler.Permission.location.status;
+
       emit(
         LocationError(
           serviceEnabled: state.serviceEnabled,
           permissionGranted: permissionGranted,
           locationData: state.locationData,
-          errorMsg: 'location_permission_denied_error',
+          errorMsg: 'permissions.location_denied_description',
+          permissionStatus: _updatePermissionStatus,
         ),
       );
 

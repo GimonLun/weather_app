@@ -106,6 +106,14 @@ class _AppState extends State<App> {
   }
 
   @override
+  void didChangeDependencies() {
+    precacheImage(const AssetImage('assets/images/bg_1.jpg'), context);
+    precacheImage(const AssetImage('assets/images/bg_2.jpg'), context);
+
+    super.didChangeDependencies();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return BlocBuilder<ThemeCubit, ThemeState>(
       builder: (context, themeState) {

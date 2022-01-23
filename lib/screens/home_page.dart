@@ -10,6 +10,7 @@ import 'package:weather_app/constants/dimen_constants.dart';
 import 'package:weather_app/constants/misc_constants.dart';
 import 'package:weather_app/cubits/city/city_list_cubit.dart';
 import 'package:weather_app/cubits/commons/languages/language_cubit.dart';
+import 'package:weather_app/cubits/commons/location/location_cubit.dart';
 import 'package:weather_app/cubits/commons/log/log_cubit.dart';
 import 'package:weather_app/cubits/commons/theme/theme_cubit.dart';
 import 'package:weather_app/cubits/home/home_cubit.dart';
@@ -30,6 +31,7 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   late HomeCubit _homeCubit;
+  late LocationCubit _locationCubit;
   late LogCubit _logCubit;
 
   late LanguageCubit _languageCubit;
@@ -41,6 +43,9 @@ class _HomePageState extends State<HomePage> {
 
     _languageCubit = BlocProvider.of(context);
     _themeCubit = BlocProvider.of(context);
+
+    _locationCubit = BlocProvider.of(context);
+    _locationCubit.getUserLocation();
 
     _logCubit = BlocProvider.of(context);
     _logCubit.initLogCubit();
@@ -123,6 +128,7 @@ class _HomePageState extends State<HomePage> {
                     ),
                     _CardSection(
                       homeCubit: _homeCubit,
+                      locationCubit: _locationCubit,
                       logCubit: _logCubit,
                     ),
                     _CityListSection(),
@@ -139,6 +145,7 @@ class _HomePageState extends State<HomePage> {
 
 class _CardSection extends StatelessWidget {
   final HomeCubit homeCubit;
+  final LocationCubit locationCubit;
   final LogCubit logCubit;
   final I18nService _i18nService;
 
@@ -146,6 +153,7 @@ class _CardSection extends StatelessWidget {
     Key? key,
     required this.homeCubit,
     required this.logCubit,
+    required this.locationCubit,
   })  : _i18nService = getIt.get(),
         super(key: key);
 
@@ -169,7 +177,24 @@ class _CardSection extends StatelessWidget {
                       builder: (context) {
                         if (index == 0) {
                           return WeatherCarouselItem(
-                              title: _i18nService.translate(context, 'current_location_weather'));
+                            title: _i18nService.translate(
+                              context,
+                              'current_location_weather',
+                            ),
+                            titleSuffix: InkWell(
+                              customBorder: const CircleBorder(),
+                              child: Padding(
+                                padding: const EdgeInsets.all(spaceSmall),
+                                child: Icon(
+                                  Icons.refresh,
+                                  color: _colorTheme.onSurfaceColor,
+                                ),
+                              ),
+                              onTap: () {
+                                locationCubit.getUserLocation(refresh: true);
+                              },
+                            ),
+                          );
                         }
 
                         if (index == _cityList.length + 1) {
