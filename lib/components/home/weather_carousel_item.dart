@@ -150,7 +150,8 @@ class _WeatherCarouselItemState extends State<WeatherCarouselItem> {
 
                           final _locationPermission = locationState.permissionStatus;
 
-                          _showOpenSettingsButton = _locationPermission == PermissionStatus.denied;
+                          _showOpenSettingsButton = _locationPermission == PermissionStatus.denied ||
+                              _locationPermission == PermissionStatus.permanentlyDenied;
 
                           return Column(
                             children: [
