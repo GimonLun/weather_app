@@ -6,6 +6,7 @@ import 'package:weather_app/constants/dimen_constants.dart';
 import 'package:weather_app/cubits/commons/location/location_cubit.dart';
 import 'package:weather_app/cubits/commons/theme/theme_cubit.dart';
 import 'package:weather_app/cubits/weather/weather_details_cubit.dart';
+import 'package:weather_app/screens/weather_details_page.dart';
 import 'package:weather_app/service_locator.dart';
 import 'package:weather_app/services/i18n_service.dart';
 
@@ -69,67 +70,81 @@ class _CurrentLocationWeatherState extends State<CurrentLocationWeather> {
             padding: const EdgeInsets.only(top: spaceLarge),
             child: PrimaryCard(
               title: _i18nService.translate(context, 'current_location_weather'),
-              child: BlocBuilder<LocationCubit, LocationState>(
-                builder: (context, locationState) {
-                  return BlocBuilder<WeatherDetailsCubit, WeatherDetailsState>(
-                    bloc: _weatherDetailsCubit,
-                    builder: (context, weatherDetailsState) {
-                      if (locationState is LocationLoading || weatherDetailsState is WeatherDetailsLoading) {
-                        return Text(
-                          _i18nService.translate(
-                            context,
-                            'loading',
-                          ),
-                          style: _subtitle2,
-                        );
-                      }
+              child: BlocBuilder<WeatherDetailsCubit, WeatherDetailsState>(
+                bloc: _weatherDetailsCubit,
+                builder: (context, weatherDetailsState) {
+                  final _isDetailsLoaded = weatherDetailsState is WeatherDetailsLoaded;
+                  final _weatherDetailsResponse = weatherDetailsState.weatherDetailsResponse;
 
-                      if (locationState is LocationError) {
-                        return Text(
-                          locationState.errorNeedTranslate
-                              ? _i18nService.translate(
-                                  context,
-                                  locationState.errorMsg,
-                                )
-                              : locationState.errorMsg,
-                          style: _subtitle2,
-                        );
-                      }
-
-                      if (weatherDetailsState is WeatherDetailsLoadFailed) {
-                        return Text(
-                          _i18nService.translate(
-                            context,
-                            'weather_load_failed',
-                          ),
-                          style: _subtitle2,
-                        );
-                      }
-
-                      if (weatherDetailsState is WeatherDetailsLoaded) {
-                        final _weatherDetailsResponse = weatherDetailsState.weatherDetailsResponse;
-                        final _current = _weatherDetailsResponse!.current;
-
-                        final _locationData = locationState.locationData!;
-
-                        return Column(
-                          children: [
-                            Text(
-                              '${_locationData.latitude}, ${_locationData.longitude}',
-                              style: _subtitle2,
+                  return GestureDetector(
+                    onTap: _isDetailsLoaded
+                        ? () {
+                            Navigator.of(context).pushNamed(
+                              WeatherDetailsPage.routeName,
+                              arguments: WeatherDetailsArg(
+                                weatherDetailsResponse: _weatherDetailsResponse,
+                              ),
+                            );
+                          }
+                        : null,
+                    child: BlocBuilder<LocationCubit, LocationState>(
+                      builder: (context, locationState) {
+                        if (locationState is LocationLoading || weatherDetailsState is WeatherDetailsLoading) {
+                          return Text(
+                            _i18nService.translate(
+                              context,
+                              'loading',
                             ),
-                            MainWeatherInfo(
-                              city: _weatherDetailsResponse.timezone,
-                              iconName: _current.weather.first.icon,
-                              currentTemp: _current.temp,
-                              feelsLikeTemp: _current.feelsLike,
-                            ),
-                          ],
-                        );
-                      }
+                            style: _subtitle2,
+                          );
+                        }
 
-                      return const SizedBox.shrink();
-                    },
+                        if (locationState is LocationError) {
+                          return Text(
+                            locationState.errorNeedTranslate
+                                ? _i18nService.translate(
+                                    context,
+                                    locationState.errorMsg,
+                                  )
+                                : locationState.errorMsg,
+                            style: _subtitle2,
+                          );
+                        }
+
+                        if (weatherDetailsState is WeatherDetailsLoadFailed) {
+                          return Text(
+                            _i18nService.translate(
+                              context,
+                              'weather_load_failed',
+                            ),
+                            style: _subtitle2,
+                          );
+                        }
+
+                        if (_isDetailsLoaded) {
+                          final _current = _weatherDetailsResponse!.current;
+
+                          final _locationData = locationState.locationData!;
+
+                          return Column(
+                            children: [
+                              Text(
+                                '${_locationData.latitude}, ${_locationData.longitude}',
+                                style: _subtitle2,
+                              ),
+                              MainWeatherInfo(
+                                city: _weatherDetailsResponse.timezone,
+                                iconName: _current.weather.first.icon,
+                                currentTemp: _current.temp,
+                                feelsLikeTemp: _current.feelsLike,
+                              ),
+                            ],
+                          );
+                        }
+
+                        return const SizedBox.shrink();
+                      },
+                    ),
                   );
                 },
               ),
