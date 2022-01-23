@@ -1,4 +1,4 @@
-# Teleport Weather App
+# Weather App
 
 Flutter home assessment submission
 
