@@ -101,7 +101,6 @@ class _AppState extends State<App> {
     _appRouter = AppRouter();
 
     BlocProvider.of<CityListCubit>(context).initCityList();
-    BlocProvider.of<LogCubit>(context).initLogCubit();
   }
 
   @override

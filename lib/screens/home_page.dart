@@ -13,6 +13,7 @@ import 'package:weather_app/cubits/commons/log/log_cubit.dart';
 import 'package:weather_app/cubits/commons/theme/theme_cubit.dart';
 import 'package:weather_app/cubits/home/home_cubit.dart';
 import 'package:weather_app/data/enums_extensions/enums.dart';
+import 'package:weather_app/screens/log_list_page.dart';
 import 'package:weather_app/screens/weather_details_page.dart';
 import 'package:weather_app/service_locator.dart';
 import 'package:weather_app/services/i18n_service.dart';
@@ -35,6 +36,7 @@ class _HomePageState extends State<HomePage> {
     super.initState();
 
     _logCubit = BlocProvider.of(context);
+    _logCubit.initLogCubit();
 
     _homeCubit = HomeCubit.initial();
     _homeCubit.initHomeCubit();
@@ -82,7 +84,9 @@ class _HomePageState extends State<HomePage> {
                             },
                           ),
                           IconButton(
-                            onPressed: () {},
+                            onPressed: () {
+                              Navigator.of(context).pushNamed(LogListPage.routeName);
+                            },
                             icon: Icon(
                               Icons.history,
                               color: _colorTheme.onSurfaceColor,

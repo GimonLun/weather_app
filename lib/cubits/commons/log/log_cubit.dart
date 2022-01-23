@@ -29,14 +29,10 @@ class LogCubit extends Cubit<LogState> {
   Future<void> initLogCubit() async {
     _logBox = await _hiveService.openBox<LocalLog>(logBoxKey);
 
-    try {
-      final _logList = _logBox.values.toList();
-      _logList.sort((a, b) => a.dateTime.compareTo(b.dateTime));
+    final _logList = _logBox.values.toList();
+    _logList.sort((a, b) => b.dateTime.compareTo(a.dateTime));
 
-      emit(LogLoaded(logs: _logList));
-    } catch (e) {
-      Logger().e(e);
-    }
+    emit(LogLoaded(logs: _logList));
   }
 
   Future<void> logEvent({

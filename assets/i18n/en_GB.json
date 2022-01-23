@@ -6,6 +6,7 @@
     "loading": "loading...",
     "location_permission_denied_error": "Location permission denied",
     "location_service_disabled_error": "Location service is not enabled",
+    "logs_history": "Log History",
     "next_7_day_forecast": "Next 7 days weather forecast",
     "temperature": "{temperature}°C",
     "view_temperature_by_city": "Select city to view temperature",
