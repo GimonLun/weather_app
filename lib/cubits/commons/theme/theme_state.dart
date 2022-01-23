@@ -32,12 +32,12 @@ class DefaultThemeState extends ThemeState {
       primaryVariantColor: Color(0xFFE67E22),
       secondaryColor: Color(0xFFF4F4F4),
       secondaryVariantColor: Color(0xFFFFEFEF),
-      surfaceColor: Colors.white,
+      surfaceColor: Colors.black26,
       backgroundColor: Colors.white,
       errorColor: Colors.red,
       onPrimaryColor: Colors.white,
       onSecondaryColor: Colors.black,
-      onSurfaceColor: Colors.black,
+      onSurfaceColor: Colors.white,
       onBackgroundColor: Colors.black,
       onErrorColor: Colors.white,
       secondaryBackgroundColor: Color(0xFFFDF8EF),
@@ -249,7 +249,7 @@ ThemeData _createThemeDataFromTemplate({
         ),
     cardTheme: CardTheme(
       elevation: defaultCardElevation,
-      color: Colors.white,
+      color: colorTheme.surfaceColor.withOpacity(0.3),
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(defaultRadius),
       ),

@@ -24,7 +24,7 @@ const double defaultIconSize = 20.0;
 const double defaultDividerSpace = 2.0;
 const double defaultDividerThickness = 0.5;
 
-const double defaultCardElevation = 10.0;
+const double defaultCardElevation = 0.0;
 const double defaultRadius = 10.0;
 
 //text related
