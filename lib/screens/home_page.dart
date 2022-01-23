@@ -6,7 +6,6 @@ import 'package:weather_app/components/weather_details/main_weather_info.dart';
 import 'package:weather_app/constants/dimen_constants.dart';
 import 'package:weather_app/cubits/city/city_list_cubit.dart';
 import 'package:weather_app/cubits/commons/location/location_cubit.dart';
-import 'package:weather_app/cubits/commons/location/location_state.dart';
 import 'package:weather_app/cubits/commons/theme/theme_cubit.dart';
 import 'package:weather_app/screens/weather_details_page.dart';
 import 'package:weather_app/service_locator.dart';
@@ -22,14 +21,9 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  late LocationCubit _locationCubit;
-
   @override
   void initState() {
     super.initState();
-
-    _locationCubit = BlocProvider.of(context);
-    _locationCubit.getUserLocation();
   }
 
   @override

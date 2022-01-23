@@ -1,5 +1,4 @@
-import 'package:equatable/equatable.dart';
-import 'package:location/location.dart';
+part of 'location_cubit.dart';
 
 abstract class LocationState extends Equatable {
   final bool serviceEnabled, permissionGranted;

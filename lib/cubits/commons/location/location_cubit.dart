@@ -1,7 +1,9 @@
+import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:location/location.dart';
-import 'package:weather_app/cubits/commons/location/location_state.dart';
 import 'package:weather_app/service_locator.dart';
+
+part 'location_state.dart';
 
 class LocationCubit extends Cubit<LocationState> {
   final Location _location;
