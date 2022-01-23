@@ -12,4 +12,13 @@ class HomeCubit extends Cubit<HomeState> {
   }) {
     return HomeCubit._(state: state ?? const HomeInitial());
   }
+
+  void addCityToHome(City city) {
+    if (state.cityList.contains(city)) {
+      emit(HomeCityAddBefore(cityList: state.cityList));
+      return;
+    }
+
+    emit(HomeCityAdded(cityList: [...state.cityList, city]));
+  }
 }

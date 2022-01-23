@@ -10,6 +10,7 @@ class MainWeatherInfo extends StatelessWidget {
   final String city, iconName;
   final double currentTemp, feelsLikeTemp;
   final I18nService _i18nService;
+  final double? containerHeight;
 
   MainWeatherInfo({
     Key? key,
@@ -17,6 +18,7 @@ class MainWeatherInfo extends StatelessWidget {
     required this.iconName,
     required this.currentTemp,
     required this.feelsLikeTemp,
+    this.containerHeight,
   })  : _i18nService = getIt.get(),
         super(key: key);
 
@@ -27,48 +29,52 @@ class MainWeatherInfo extends StatelessWidget {
         final _textTheme = themeState.themeData.textTheme;
         final _colorTheme = themeState.colorTheme;
 
-        return Container(
-          padding: const EdgeInsets.symmetric(vertical: spaceLarge),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.only(right: spaceMid),
-                    child: Image.network(
-                      '$openWeatherIconBaseUrl$iconName.png',
+        return SizedBox(
+          height: containerHeight,
+          child: FittedBox(
+            fit: BoxFit.scaleDown,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.only(right: spaceMid),
+                      child: Image.network(
+                        '$openWeatherIconBaseUrl$iconName.png',
+                      ),
                     ),
-                  ),
-                  Text(
-                    city,
-                    style: _textTheme.headline3!.copyWith(
+                    Text(
+                      city,
+                      style: _textTheme.headline3!.copyWith(
+                        color: _colorTheme.onSurfaceColor,
+                      ),
+                    ),
+                  ],
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(bottom: spaceMid),
+                  child: Text(
+                    _i18nService.translate(context, 'temperature', translationParams: {
+                      'temperature': currentTemp.toString(),
+                    }),
+                    style: _textTheme.headline1!.copyWith(
                       color: _colorTheme.onSurfaceColor,
                     ),
                   ),
-                ],
-              ),
-              Padding(
-                padding: const EdgeInsets.symmetric(vertical: spaceMid),
-                child: Text(
-                  _i18nService.translate(context, 'temperature', translationParams: {
-                    'temperature': currentTemp.toString(),
+                ),
+                Text(
+                  _i18nService.translate(context, 'feel_like', translationParams: {
+                    'temperature': feelsLikeTemp.toString(),
                   }),
-                  style: _textTheme.headline1!.copyWith(
+                  style: _textTheme.subtitle2!.copyWith(
                     color: _colorTheme.onSurfaceColor,
                   ),
                 ),
-              ),
-              Text(
-                _i18nService.translate(context, 'feel_like', translationParams: {
-                  'temperature': feelsLikeTemp.toString(),
-                }),
-                style: _textTheme.subtitle2!.copyWith(
-                  color: _colorTheme.onSurfaceColor,
-                ),
-              ),
-            ],
+              ],
+            ),
           ),
         );
       },

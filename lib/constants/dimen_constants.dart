@@ -19,6 +19,7 @@ const double screenBoundingSpace = 20.0;
 
 //icon related
 const double defaultIconSize = 20.0;
+const double iconSizeLarge = 30.0;
 
 //divider themedata
 const double defaultDividerSpace = 2.0;
@@ -26,6 +27,9 @@ const double defaultDividerThickness = 0.5;
 
 const double defaultCardElevation = 0.0;
 const double defaultRadius = 10.0;
+
+const double homePageCardContentHeight = 100.0;
+const double homePageCarousellHeight = 200.0;
 
 //text related
 const double headline1FontSize = 52.0;

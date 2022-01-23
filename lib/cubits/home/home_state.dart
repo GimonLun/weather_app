@@ -29,3 +29,17 @@ class HomeLoaded extends HomeState {
   @override
   List<Object?> get props => super.props..addAll([]);
 }
+
+class HomeCityAdded extends HomeLoaded {
+  const HomeCityAdded({required List<City> cityList}) : super(cityList: cityList);
+
+  @override
+  List<Object?> get props => super.props..addAll([]);
+}
+
+class HomeCityAddBefore extends HomeLoaded {
+  const HomeCityAddBefore({required List<City> cityList}) : super(cityList: cityList);
+
+  @override
+  List<Object?> get props => super.props..addAll([]);
+}

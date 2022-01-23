@@ -6,11 +6,13 @@ import 'package:weather_app/cubits/commons/theme/theme_cubit.dart';
 class PrimaryCard extends StatelessWidget {
   final String title;
   final Widget child;
+  final EdgeInsets? margin;
 
   const PrimaryCard({
     Key? key,
     required this.title,
     required this.child,
+    this.margin,
   }) : super(key: key);
 
   @override
@@ -21,23 +23,33 @@ class PrimaryCard extends StatelessWidget {
         final _colorTheme = themeState.colorTheme;
 
         return Card(
-          margin: const EdgeInsets.fromLTRB(screenBoundingSpace, screenBoundingSpace, screenBoundingSpace, 0.0),
+          margin:
+              margin ?? const EdgeInsets.fromLTRB(screenBoundingSpace, screenBoundingSpace, screenBoundingSpace, 0.0),
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: spaceLarge),
             child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              mainAxisAlignment: MainAxisAlignment.start,
               children: [
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.symmetric(vertical: spaceXMid),
+                      child: Text(
+                        title,
+                        style: _textTheme.subtitle1!.copyWith(
+                          color: _colorTheme.onSurfaceColor,
+                        ),
+                      ),
+                    ),
+                    Divider(color: _colorTheme.onSurfaceColor),
+                  ],
+                ),
                 Padding(
                   padding: const EdgeInsets.symmetric(vertical: spaceXMid),
-                  child: Text(
-                    title,
-                    style: _textTheme.subtitle1!.copyWith(
-                      color: _colorTheme.onSurfaceColor,
-                    ),
-                  ),
+                  child: child,
                 ),
-                Divider(color: _colorTheme.onSurfaceColor),
-                Padding(padding: const EdgeInsets.symmetric(vertical: spaceXMid), child: child),
               ],
             ),
           ),

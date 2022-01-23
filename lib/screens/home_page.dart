@@ -1,11 +1,14 @@
+import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:weather_app/components/card/card_info_item.dart';
 import 'package:weather_app/components/card/primary_card.dart';
-import 'package:weather_app/components/home/current_location_weather.dart';
+import 'package:weather_app/components/home/add_city_card.dart';
+import 'package:weather_app/components/home/weather_carousel_item.dart';
 import 'package:weather_app/constants/dimen_constants.dart';
 import 'package:weather_app/cubits/city/city_list_cubit.dart';
 import 'package:weather_app/cubits/commons/theme/theme_cubit.dart';
+import 'package:weather_app/cubits/home/home_cubit.dart';
 import 'package:weather_app/screens/weather_details_page.dart';
 import 'package:weather_app/service_locator.dart';
 import 'package:weather_app/services/i18n_service.dart';
@@ -20,9 +23,13 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  late HomeCubit _homeCubit;
+
   @override
   void initState() {
     super.initState();
+
+    _homeCubit = HomeCubit.initial();
   }
 
   @override
@@ -54,7 +61,7 @@ class _HomePageState extends State<HomePage> {
                       ),
                     ),
                   ),
-                  const CurrentLocationWeather(),
+                  _CardSection(homeCubit: _homeCubit),
                   _CityListSection(),
                 ]),
               ),
@@ -62,6 +69,65 @@ class _HomePageState extends State<HomePage> {
           );
         },
       ),
+    );
+  }
+}
+
+class _CardSection extends StatelessWidget {
+  final HomeCubit homeCubit;
+  final I18nService _i18nService;
+
+  _CardSection({
+    Key? key,
+    required this.homeCubit,
+  })  : _i18nService = getIt.get(),
+        super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocBuilder<HomeCubit, HomeState>(
+      bloc: homeCubit,
+      builder: (context, homeState) {
+        final _cityList = homeState.cityList;
+
+        return CarouselSlider.builder(
+          itemBuilder: (context, index, realIndex) => LayoutBuilder(
+            builder: (context, constraints) {
+              return Padding(
+                padding: const EdgeInsets.symmetric(horizontal: spaceMid),
+                child: Builder(
+                  builder: (context) {
+                    if (index == 0) {
+                      return WeatherCarouselItem(title: _i18nService.translate(context, 'current_location_weather'));
+                    }
+
+                    if (index == _cityList.length + 1) {
+                      return AddCityCard(homeCubit: homeCubit);
+                    }
+
+                    final _city = _cityList.elementAt(index - 1);
+
+                    return WeatherCarouselItem(
+                      title: _city.city,
+                      city: _city,
+                    );
+                  },
+                ),
+              );
+            },
+          ),
+          itemCount: _cityList.length + 2,
+          options: CarouselOptions(
+            height: homePageCarousellHeight,
+            initialPage: 0,
+            viewportFraction: 0.9,
+            enableInfiniteScroll: false,
+            reverse: false,
+            enlargeCenterPage: false,
+            scrollDirection: Axis.horizontal,
+          ),
+        );
+      },
     );
   }
 }
