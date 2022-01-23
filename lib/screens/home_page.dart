@@ -30,6 +30,7 @@ class _HomePageState extends State<HomePage> {
     super.initState();
 
     _homeCubit = HomeCubit.initial();
+    _homeCubit.initHomeCubit();
   }
 
   @override
