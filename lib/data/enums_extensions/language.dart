@@ -21,4 +21,13 @@ extension LanguageExtension on Language {
         return const Locale('en', 'GB');
     }
   }
+
+  String get shortName {
+    switch (this) {
+      case Language.cn:
+        return 'zh';
+      default:
+        return 'en';
+    }
+  }
 }
