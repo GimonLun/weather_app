@@ -4,7 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:weather_app/components/card/card_info_item.dart';
 import 'package:weather_app/components/card/primary_card.dart';
 import 'package:weather_app/components/home/add_city_card.dart';
-import 'package:weather_app/components/home/current_location_weather.dart';
+import 'package:weather_app/components/home/weather_carousel_item.dart';
 import 'package:weather_app/constants/dimen_constants.dart';
 import 'package:weather_app/cubits/city/city_list_cubit.dart';
 import 'package:weather_app/cubits/commons/theme/theme_cubit.dart';
@@ -98,7 +98,7 @@ class _CardSection extends StatelessWidget {
                 child: Builder(
                   builder: (context) {
                     if (index == 0) {
-                      return CurrentLocationWeather(title: _i18nService.translate(context, 'current_location_weather'));
+                      return WeatherCarouselItem(title: _i18nService.translate(context, 'current_location_weather'));
                     }
 
                     if (index == _cityList.length + 1) {
@@ -107,7 +107,7 @@ class _CardSection extends StatelessWidget {
 
                     final _city = _cityList.elementAt(index - 1);
 
-                    return CurrentLocationWeather(
+                    return WeatherCarouselItem(
                       title: _city.city,
                       city: _city,
                     );

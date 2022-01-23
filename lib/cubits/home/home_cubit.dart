@@ -14,6 +14,11 @@ class HomeCubit extends Cubit<HomeState> {
   }
 
   void addCityToHome(City city) {
+    if (state.cityList.contains(city)) {
+      emit(HomeCityAddBefore(cityList: state.cityList));
+      return;
+    }
+
     emit(HomeCityAdded(cityList: [...state.cityList, city]));
   }
 }

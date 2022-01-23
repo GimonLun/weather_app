@@ -11,21 +11,21 @@ import 'package:weather_app/screens/weather_details_page.dart';
 import 'package:weather_app/service_locator.dart';
 import 'package:weather_app/services/i18n_service.dart';
 
-class CurrentLocationWeather extends StatefulWidget {
+class WeatherCarouselItem extends StatefulWidget {
   final String title;
   final City? city;
 
-  const CurrentLocationWeather({
+  const WeatherCarouselItem({
     Key? key,
     this.city,
     required this.title,
   }) : super(key: key);
 
   @override
-  _CurrentLocationWeatherState createState() => _CurrentLocationWeatherState();
+  _WeatherCarouselItemState createState() => _WeatherCarouselItemState();
 }
 
-class _CurrentLocationWeatherState extends State<CurrentLocationWeather> {
+class _WeatherCarouselItemState extends State<WeatherCarouselItem> {
   late I18nService _i18nService;
 
   late LocationCubit _locationCubit;
