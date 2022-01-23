@@ -45,8 +45,11 @@ class _WeatherDetailsPageState extends State<WeatherDetailsPage> {
 
     _citySelected = widget.args.citySelected;
 
-    _weatherDetailsCubit = WeatherDetailsCubit.initial(citySelected: _citySelected);
-    _weatherDetailsCubit.loadWeatherDetails();
+    _weatherDetailsCubit = WeatherDetailsCubit.initial();
+    _weatherDetailsCubit.loadWeatherDetails(
+      lat: _citySelected.lat,
+      lng: _citySelected.lng,
+    );
   }
 
   @override

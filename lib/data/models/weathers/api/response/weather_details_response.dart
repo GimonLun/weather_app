@@ -7,11 +7,13 @@ part 'weather_details_response.g.dart';
 
 @JsonSerializable(explicitToJson: true)
 class WeatherDetailsResponse extends Equatable {
+  final String timezone;
   final Hourly current;
   final List<Hourly> hourly;
   final List<Daily> daily;
 
   const WeatherDetailsResponse({
+    required this.timezone,
     required this.current,
     required this.hourly,
     required this.daily,
@@ -23,6 +25,7 @@ class WeatherDetailsResponse extends Equatable {
 
   @override
   List<Object> get props => [
+        timezone,
         current,
         hourly,
         daily,
