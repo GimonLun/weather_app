@@ -2,6 +2,9 @@ import 'package:weather_app/data/enums_extensions/enums.dart';
 
 const Language defaultLanguage = Language.en;
 
+const String homePageCarousell = 'Home page carousell';
+const String weatherDetailsPage = 'Weather details page';
+
 const String openWeatherBaseUrl = 'https://api.openweathermap.org/data/2.5/';
 const String openWeatherIconBaseUrl = 'http://openweathermap.org/img/w/';
 

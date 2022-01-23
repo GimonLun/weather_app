@@ -8,15 +8,20 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_i18n/flutter_i18n.dart';
 import 'package:flutter_i18n/loaders/decoders/json_decode_strategy.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 import 'package:logger/logger.dart';
 import 'package:weather_app/constants/misc_constants.dart';
 import 'package:weather_app/cubits/city/city_list_cubit.dart';
 import 'package:weather_app/cubits/commons/languages/language_cubit.dart';
+import 'package:weather_app/cubits/commons/log/log_cubit.dart';
 import 'package:weather_app/cubits/commons/theme/theme_cubit.dart';
 import 'package:weather_app/cubits/cubits.dart';
+import 'package:weather_app/data/models/city.dart';
+import 'package:weather_app/data/models/logs/local_log.dart';
 import 'package:weather_app/repositories/open_weather_rest_client.dart';
 import 'package:weather_app/screens/home_page.dart';
 import 'package:weather_app/service_locator.dart';
+import 'package:weather_app/services/hive_service.dart';
 import 'package:weather_app/services/i18n_service.dart';
 import 'package:weather_app/services/navigation_service.dart';
 
@@ -28,24 +33,24 @@ Future<void> main() async {
       WidgetsFlutterBinding.ensureInitialized();
 
       FlutterError.onError = (details) => {
-            //TODO handle flutter error
+            //TODO log error to error login system (Sentry/Crashytics) or display comment error dialog for unhandle error
             Logger().e(details)
           };
 
       _registerDependencies();
 
+      _initHive();
+
       runApp(
         MultiBlocProvider(
-          // Global cubit or bloc define here
-          // Prevent unnecessary global cubit/bloc
           providers: globalBlocProviders,
           child: const App(),
         ),
       );
     },
     (error, stack) => {
+      //TODO log error to error login system (Sentry/Crashytics) or display comment error dialog for unhandle error
       Logger().e(error, stack)
-      //TODO handle other error
     },
   );
 }
@@ -66,6 +71,17 @@ void _registerDependencies() {
   );
 
   getIt.registerLazySingleton<OpenWeatherRestClient>(() => OpenWeatherRestClient(_dio));
+
+  getIt.registerLazySingleton<HiveService>(() => HiveService());
+}
+
+Future<void> _initHive() async {
+  await Hive.initFlutter();
+
+  Hive.registerAdapter(CityAdapter());
+  Hive.registerAdapter(ActionTypeAdapter());
+  Hive.registerAdapter(CategoryAdapter());
+  Hive.registerAdapter(LocalLogAdapter());
 }
 
 class App extends StatefulWidget {

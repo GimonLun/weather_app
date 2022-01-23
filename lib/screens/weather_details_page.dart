@@ -6,8 +6,11 @@ import 'package:weather_app/components/card/primary_card.dart';
 import 'package:weather_app/components/weather_details/hourly_info_widget.dart';
 import 'package:weather_app/components/weather_details/main_weather_info.dart';
 import 'package:weather_app/constants/dimen_constants.dart';
+import 'package:weather_app/constants/misc_constants.dart';
+import 'package:weather_app/cubits/commons/log/log_cubit.dart';
 import 'package:weather_app/cubits/commons/theme/theme_cubit.dart';
 import 'package:weather_app/cubits/weather/weather_details_cubit.dart';
+import 'package:weather_app/data/enums_extensions/enums.dart';
 import 'package:weather_app/data/models/city.dart';
 import 'package:weather_app/data/models/weathers/api/response/weather_details_response.dart';
 import 'package:weather_app/service_locator.dart';
@@ -67,6 +70,15 @@ class _WeatherDetailsPageState extends State<WeatherDetailsPage> {
     }
 
     _cityName = _citySelected?.city ?? _weatherDetailsResponse!.timezone;
+
+    final _logCubit = BlocProvider.of<LogCubit>(context);
+
+    _logCubit.logEvent(
+      actionType: ActionType.read,
+      category: Category.weather,
+      pageName: weatherDetailsPage,
+      data: _citySelected?.city.toString() ?? _weatherDetailsResponse?.latLng,
+    );
   }
 
   @override
