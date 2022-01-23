@@ -3,7 +3,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:weather_app/components/card/card_info_item.dart';
 import 'package:weather_app/cubits/commons/theme/theme_cubit.dart';
-import 'package:weather_app/service_locator.dart';
 
 import '../mocks/cubits/commons/mock_commons.dart';
 
