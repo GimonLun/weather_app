@@ -53,6 +53,7 @@ class _HomePageState extends State<HomePage> {
                       ),
                     ),
                   ),
+                  _CurrentLocationWeather(),
                   _CityListSection(),
                 ]),
               ),
@@ -60,6 +61,39 @@ class _HomePageState extends State<HomePage> {
           );
         },
       ),
+    );
+  }
+}
+
+class _CurrentLocationWeather extends StatelessWidget {
+  final I18nService _i18nService;
+
+  _CurrentLocationWeather({
+    Key? key,
+  })  : _i18nService = getIt.get(),
+        super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocBuilder<ThemeCubit, ThemeState>(
+      builder: (context, themeState) {
+        final _textTheme = themeState.themeData.textTheme;
+        final _colorTheme = themeState.colorTheme;
+
+        return Padding(
+          padding: const EdgeInsets.only(top: spaceLarge),
+          child: PrimaryCard(
+            title: _i18nService.translate(context, 'current_location_weather'),
+            child: Text(
+              _i18nService.translate(
+                context,
+                'loading',
+              ),
+              style: _textTheme.subtitle2!.copyWith(color: _colorTheme.onSurfaceColor),
+            ),
+          ),
+        );
+      },
     );
   }
 }
@@ -74,44 +108,52 @@ class _CityListSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.only(top: spaceLarge),
-      child: PrimaryCard(
-        title: _i18nService.translate(context, 'view_temperature_by_city'),
-        child: BlocBuilder<CityListCubit, CityListState>(
-          builder: (context, cityListState) {
-            if (cityListState is CityListLoaded) {
-              final _cityList = cityListState.cityList;
+    return BlocBuilder<ThemeCubit, ThemeState>(
+      builder: (context, themeState) {
+        final _textTheme = themeState.themeData.textTheme;
+        final _colorTheme = themeState.colorTheme;
 
-              return Column(
-                mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: _cityList.map(
-                  (city) {
-                    return CardInfoItem(
-                      label: city.city,
-                      showArrow: true,
-                      onTap: () {
-                        Navigator.of(context).pushNamed(
-                          WeatherDetailsPage.routeName,
-                          arguments: WeatherDetailsArg(citySelected: city),
+        return Padding(
+          padding: const EdgeInsets.only(top: spaceLarge),
+          child: PrimaryCard(
+            title: _i18nService.translate(context, 'view_temperature_by_city'),
+            child: BlocBuilder<CityListCubit, CityListState>(
+              builder: (context, cityListState) {
+                if (cityListState is CityListLoaded) {
+                  final _cityList = cityListState.cityList;
+
+                  return Column(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: _cityList.map(
+                      (city) {
+                        return CardInfoItem(
+                          label: city.city,
+                          showArrow: true,
+                          onTap: () {
+                            Navigator.of(context).pushNamed(
+                              WeatherDetailsPage.routeName,
+                              arguments: WeatherDetailsArg(citySelected: city),
+                            );
+                          },
                         );
                       },
-                    );
-                  },
-                ).toList(),
-              );
-            }
+                    ).toList(),
+                  );
+                }
 
-            return Text(
-              _i18nService.translate(
-                context,
-                'loading',
-              ),
-            );
-          },
-        ),
-      ),
+                return Text(
+                  _i18nService.translate(
+                    context,
+                    'loading',
+                  ),
+                  style: _textTheme.subtitle2!.copyWith(color: _colorTheme.onSurfaceColor),
+                );
+              },
+            ),
+          ),
+        );
+      },
     );
   }
 }
