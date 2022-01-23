@@ -27,6 +27,9 @@ const double defaultDividerThickness = 0.5;
 const double defaultCardElevation = 0.0;
 const double defaultRadius = 10.0;
 
+const double homePageCardContentHeight = 100.0;
+const double homePageCarousellHeight = 200.0;
+
 //text related
 const double headline1FontSize = 52.0;
 const FontWeight headline1FontWeight = FontWeight.bold;

@@ -1,3 +1,4 @@
+import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:weather_app/components/card/card_info_item.dart';
@@ -54,13 +55,41 @@ class _HomePageState extends State<HomePage> {
                       ),
                     ),
                   ),
-                  const CurrentLocationWeather(),
+                  const _CardSection(),
                   _CityListSection(),
                 ]),
               ),
             ),
           );
         },
+      ),
+    );
+  }
+}
+
+class _CardSection extends StatelessWidget {
+  const _CardSection({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return CarouselSlider.builder(
+      itemBuilder: (context, index, realIndex) => LayoutBuilder(
+        builder: (context, constraints) {
+          return const Padding(
+            padding: EdgeInsets.symmetric(horizontal: spaceMid),
+            child: CurrentLocationWeather(),
+          );
+        },
+      ),
+      itemCount: 3,
+      options: CarouselOptions(
+        height: homePageCarousellHeight,
+        initialPage: 0,
+        viewportFraction: 0.9,
+        enableInfiniteScroll: false,
+        reverse: false,
+        enlargeCenterPage: false,
+        scrollDirection: Axis.horizontal,
       ),
     );
   }

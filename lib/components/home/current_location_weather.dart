@@ -69,6 +69,7 @@ class _CurrentLocationWeatherState extends State<CurrentLocationWeather> {
           return Padding(
             padding: const EdgeInsets.only(top: spaceLarge),
             child: PrimaryCard(
+              margin: EdgeInsets.zero,
               title: _i18nService.translate(context, 'current_location_weather'),
               child: BlocBuilder<WeatherDetailsCubit, WeatherDetailsState>(
                 bloc: _weatherDetailsCubit,
@@ -89,6 +90,18 @@ class _CurrentLocationWeatherState extends State<CurrentLocationWeather> {
                         : null,
                     child: BlocBuilder<LocationCubit, LocationState>(
                       builder: (context, locationState) {
+                        if (_isDetailsLoaded) {
+                          final _current = _weatherDetailsResponse!.current;
+
+                          return MainWeatherInfo(
+                            containerHeight: homePageCardContentHeight,
+                            city: _weatherDetailsResponse.timezone,
+                            iconName: _current.weather.first.icon,
+                            currentTemp: _current.temp,
+                            feelsLikeTemp: _current.feelsLike,
+                          );
+                        }
+
                         if (locationState is LocationLoading || weatherDetailsState is WeatherDetailsLoading) {
                           return Text(
                             _i18nService.translate(
@@ -118,27 +131,6 @@ class _CurrentLocationWeatherState extends State<CurrentLocationWeather> {
                               'weather_load_failed',
                             ),
                             style: _subtitle2,
-                          );
-                        }
-
-                        if (_isDetailsLoaded) {
-                          final _current = _weatherDetailsResponse!.current;
-
-                          final _locationData = locationState.locationData!;
-
-                          return Column(
-                            children: [
-                              Text(
-                                '${_locationData.latitude}, ${_locationData.longitude}',
-                                style: _subtitle2,
-                              ),
-                              MainWeatherInfo(
-                                city: _weatherDetailsResponse.timezone,
-                                iconName: _current.weather.first.icon,
-                                currentTemp: _current.temp,
-                                feelsLikeTemp: _current.feelsLike,
-                              ),
-                            ],
                           );
                         }
 

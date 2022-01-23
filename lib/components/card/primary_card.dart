@@ -6,11 +6,13 @@ import 'package:weather_app/cubits/commons/theme/theme_cubit.dart';
 class PrimaryCard extends StatelessWidget {
   final String title;
   final Widget child;
+  final EdgeInsets? margin;
 
   const PrimaryCard({
     Key? key,
     required this.title,
     required this.child,
+    this.margin,
   }) : super(key: key);
 
   @override
@@ -21,11 +23,12 @@ class PrimaryCard extends StatelessWidget {
         final _colorTheme = themeState.colorTheme;
 
         return Card(
-          margin: const EdgeInsets.fromLTRB(screenBoundingSpace, screenBoundingSpace, screenBoundingSpace, 0.0),
+          margin:
+              margin ?? const EdgeInsets.fromLTRB(screenBoundingSpace, screenBoundingSpace, screenBoundingSpace, 0.0),
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: spaceLarge),
             child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 Padding(
                   padding: const EdgeInsets.symmetric(vertical: spaceXMid),
