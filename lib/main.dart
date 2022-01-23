@@ -83,9 +83,6 @@ Future<void> _initHive() async {
   Hive.registerAdapter(CategoryAdapter());
   Hive.registerAdapter(LanguageAdapter());
   Hive.registerAdapter(LocalLogAdapter());
-
-  // Open this box early because needed when app launch
-  await Hive.openBox(settingBoxKey);
 }
 
 class App extends StatefulWidget {
@@ -106,6 +103,7 @@ class _AppState extends State<App> {
 
     BlocProvider.of<CityListCubit>(context).initCityList();
     BlocProvider.of<LanguageCubit>(context).initAppLanguage();
+    BlocProvider.of<ThemeCubit>(context).initAppTheme();
   }
 
   @override

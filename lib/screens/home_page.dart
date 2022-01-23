@@ -1,4 +1,5 @@
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:weather_app/components/card/card_info_item.dart';
@@ -30,13 +31,16 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   late HomeCubit _homeCubit;
   late LogCubit _logCubit;
+
   late LanguageCubit _languageCubit;
+  late ThemeCubit _themeCubit;
 
   @override
   void initState() {
     super.initState();
 
     _languageCubit = BlocProvider.of(context);
+    _themeCubit = BlocProvider.of(context);
 
     _logCubit = BlocProvider.of(context);
     _logCubit.initLogCubit();
@@ -56,9 +60,9 @@ class _HomePageState extends State<HomePage> {
           return Container(
             height: MediaQuery.of(context).size.height,
             width: MediaQuery.of(context).size.width,
-            decoration: const BoxDecoration(
+            decoration: BoxDecoration(
               image: DecorationImage(
-                image: AssetImage("assets/images/bg_1.jpg"),
+                image: AssetImage(themeState.bgImg),
                 fit: BoxFit.cover,
               ),
             ),
@@ -90,14 +94,29 @@ class _HomePageState extends State<HomePage> {
                               );
                             },
                           ),
-                          IconButton(
-                            onPressed: () {
-                              Navigator.of(context).pushNamed(LogListPage.routeName);
-                            },
-                            icon: Icon(
-                              Icons.history,
-                              color: _colorTheme.onSurfaceColor,
-                            ),
+                          Row(
+                            children: [
+                              IconButton(
+                                onPressed: () {
+                                  _themeCubit.changeTheme();
+                                },
+                                icon: Icon(
+                                  themeState is DefaultThemeState
+                                      ? CupertinoIcons.moon_circle
+                                      : CupertinoIcons.moon_circle_fill,
+                                  color: _colorTheme.onSurfaceColor,
+                                ),
+                              ),
+                              IconButton(
+                                onPressed: () {
+                                  Navigator.of(context).pushNamed(LogListPage.routeName);
+                                },
+                                icon: Icon(
+                                  Icons.history,
+                                  color: _colorTheme.onSurfaceColor,
+                                ),
+                              ),
+                            ],
                           ),
                         ],
                       ),
