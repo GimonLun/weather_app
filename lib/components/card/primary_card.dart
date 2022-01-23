@@ -7,12 +7,14 @@ class PrimaryCard extends StatelessWidget {
   final String title;
   final Widget child;
   final EdgeInsets? margin;
+  final Widget? titleSuffix;
 
   const PrimaryCard({
     Key? key,
     required this.title,
     required this.child,
     this.margin,
+    this.titleSuffix,
   }) : super(key: key);
 
   @override
@@ -34,14 +36,21 @@ class PrimaryCard extends StatelessWidget {
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
-                    Padding(
-                      padding: const EdgeInsets.symmetric(vertical: spaceXMid),
-                      child: Text(
-                        title,
-                        style: _textTheme.subtitle1!.copyWith(
-                          color: _colorTheme.onSurfaceColor,
+                    Row(
+                      children: [
+                        Expanded(
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(vertical: spaceXMid),
+                            child: Text(
+                              title,
+                              style: _textTheme.subtitle1!.copyWith(
+                                color: _colorTheme.onSurfaceColor,
+                              ),
+                            ),
+                          ),
                         ),
-                      ),
+                        if (titleSuffix != null) titleSuffix!
+                      ],
                     ),
                     Divider(color: _colorTheme.onSurfaceColor),
                   ],

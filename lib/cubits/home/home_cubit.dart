@@ -21,4 +21,12 @@ class HomeCubit extends Cubit<HomeState> {
 
     emit(HomeCityAdded(cityList: [...state.cityList, city]));
   }
+
+  void removeCityFromHome(City city) {
+    final _updatedList = [...state.cityList];
+
+    _updatedList.remove(city);
+
+    emit(HomeCityRemoved(cityList: _updatedList));
+  }
 }

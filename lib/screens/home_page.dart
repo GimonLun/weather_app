@@ -85,47 +85,65 @@ class _CardSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<HomeCubit, HomeState>(
-      bloc: homeCubit,
-      builder: (context, homeState) {
-        final _cityList = homeState.cityList;
+    return BlocBuilder<ThemeCubit, ThemeState>(
+      builder: (context, themeState) {
+        final _colorTheme = themeState.colorTheme;
 
-        return CarouselSlider.builder(
-          itemBuilder: (context, index, realIndex) => LayoutBuilder(
-            builder: (context, constraints) {
-              return Padding(
-                padding: const EdgeInsets.symmetric(horizontal: spaceMid),
-                child: Builder(
-                  builder: (context) {
-                    if (index == 0) {
-                      return WeatherCarouselItem(title: _i18nService.translate(context, 'current_location_weather'));
-                    }
+        return BlocBuilder<HomeCubit, HomeState>(
+          bloc: homeCubit,
+          builder: (context, homeState) {
+            final _cityList = homeState.cityList;
 
-                    if (index == _cityList.length + 1) {
-                      return AddCityCard(homeCubit: homeCubit);
-                    }
+            return CarouselSlider.builder(
+              itemBuilder: (context, index, realIndex) => LayoutBuilder(
+                builder: (context, constraints) {
+                  return Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: spaceMid),
+                    child: Builder(
+                      builder: (context) {
+                        if (index == 0) {
+                          return WeatherCarouselItem(
+                              title: _i18nService.translate(context, 'current_location_weather'));
+                        }
 
-                    final _city = _cityList.elementAt(index - 1);
+                        if (index == _cityList.length + 1) {
+                          return AddCityCard(homeCubit: homeCubit);
+                        }
 
-                    return WeatherCarouselItem(
-                      title: _city.city,
-                      city: _city,
-                    );
-                  },
-                ),
-              );
-            },
-          ),
-          itemCount: _cityList.length + 2,
-          options: CarouselOptions(
-            height: homePageCarousellHeight,
-            initialPage: 0,
-            viewportFraction: 0.9,
-            enableInfiniteScroll: false,
-            reverse: false,
-            enlargeCenterPage: false,
-            scrollDirection: Axis.horizontal,
-          ),
+                        final _city = _cityList.elementAt(index - 1);
+
+                        return WeatherCarouselItem(
+                          title: _city.city,
+                          titleSuffix: InkWell(
+                            customBorder: const CircleBorder(),
+                            child: Padding(
+                              padding: const EdgeInsets.all(spaceSmall),
+                              child: Icon(
+                                Icons.delete,
+                                color: _colorTheme.onSurfaceColor,
+                              ),
+                            ),
+                            onTap: () => homeCubit.removeCityFromHome(_city),
+                          ),
+                          city: _city,
+                        );
+                      },
+                    ),
+                  );
+                },
+              ),
+              itemCount: _cityList.length + 2,
+              options: CarouselOptions(
+                height: homePageCarousellHeight,
+                initialPage: 0,
+                viewportFraction: 0.9,
+                enableInfiniteScroll: false,
+                reverse: false,
+                enlargeCenterPage: false,
+                scrollDirection: Axis.horizontal,
+              ),
+            );
+          },
         );
       },
     );

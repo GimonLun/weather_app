@@ -13,12 +13,14 @@ import 'package:weather_app/services/i18n_service.dart';
 
 class WeatherCarouselItem extends StatefulWidget {
   final String title;
+  final Widget? titleSuffix;
   final City? city;
 
   const WeatherCarouselItem({
     Key? key,
     this.city,
     required this.title,
+    this.titleSuffix,
   }) : super(key: key);
 
   @override
@@ -31,23 +33,21 @@ class _WeatherCarouselItemState extends State<WeatherCarouselItem> {
   late LocationCubit _locationCubit;
   late WeatherDetailsCubit _weatherDetailsCubit;
 
-  late City? _city;
-
   @override
   void initState() {
     super.initState();
 
     _i18nService = getIt.get();
 
-    _city = widget.city;
+    final _city = widget.city;
 
     _weatherDetailsCubit = WeatherDetailsCubit.initial();
     _locationCubit = BlocProvider.of(context);
 
     if (_city != null) {
       _weatherDetailsCubit.loadWeatherDetails(
-        lat: _city!.lat,
-        lng: _city!.lng,
+        lat: _city.lat,
+        lng: _city.lng,
       );
     } else {
       _locationCubit.getUserLocation();
@@ -91,6 +91,7 @@ class _WeatherCarouselItemState extends State<WeatherCarouselItem> {
             child: PrimaryCard(
               margin: EdgeInsets.zero,
               title: widget.title,
+              titleSuffix: widget.titleSuffix,
               child: BlocBuilder<WeatherDetailsCubit, WeatherDetailsState>(
                 bloc: _weatherDetailsCubit,
                 builder: (context, weatherDetailsState) {
@@ -104,7 +105,7 @@ class _WeatherCarouselItemState extends State<WeatherCarouselItem> {
                               WeatherDetailsPage.routeName,
                               arguments: WeatherDetailsArg(
                                 weatherDetailsResponse: _weatherDetailsResponse,
-                                citySelected: _city,
+                                citySelected: widget.city,
                               ),
                             );
                           }

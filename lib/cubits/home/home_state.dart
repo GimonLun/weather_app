@@ -43,3 +43,10 @@ class HomeCityAddBefore extends HomeLoaded {
   @override
   List<Object?> get props => super.props..addAll([]);
 }
+
+class HomeCityRemoved extends HomeLoaded {
+  const HomeCityRemoved({required List<City> cityList}) : super(cityList: cityList);
+
+  @override
+  List<Object?> get props => super.props..addAll([]);
+}
