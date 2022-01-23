@@ -15,7 +15,7 @@ import 'package:weather_app/cubits/commons/languages/language_cubit.dart';
 import 'package:weather_app/cubits/commons/theme/theme_cubit.dart';
 import 'package:weather_app/cubits/cubits.dart';
 import 'package:weather_app/repositories/open_weather_rest_client.dart';
-import 'package:weather_app/screens/city/city_list_page.dart';
+import 'package:weather_app/screens/home_page.dart';
 import 'package:weather_app/service_locator.dart';
 import 'package:weather_app/services/i18n_service.dart';
 import 'package:weather_app/services/navigation_service.dart';
@@ -115,7 +115,7 @@ class _AppState extends State<App> {
                 ),
               ],
               onGenerateRoute: _appRouter.onGenerateRoute,
-              home: const CityListPage(),
+              home: const HomePage(),
             );
           },
         );
