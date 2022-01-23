@@ -1,13 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
+import 'package:weather_app/components/card/card_info_item.dart';
+import 'package:weather_app/components/card/primary_card.dart';
+import 'package:weather_app/components/weather_details/hourly_info_widget.dart';
+import 'package:weather_app/components/weather_details/main_weather_info.dart';
 import 'package:weather_app/constants/dimen_constants.dart';
-import 'package:weather_app/constants/misc_constants.dart';
 import 'package:weather_app/cubits/commons/theme/theme_cubit.dart';
 import 'package:weather_app/cubits/weather/weather_details_cubit.dart';
 import 'package:weather_app/data/models/city.dart';
 import 'package:weather_app/data/models/weathers/api/response/weather_details_response.dart';
-import 'package:weather_app/data/models/weathers/hourly.dart';
 import 'package:weather_app/service_locator.dart';
 import 'package:weather_app/services/i18n_service.dart';
 
@@ -107,9 +109,11 @@ class _WeatherDetailsPageState extends State<WeatherDetailsPage> {
                           return Column(
                             crossAxisAlignment: CrossAxisAlignment.stretch,
                             children: [
-                              _CityWeatherDetails(
-                                current: _current,
-                                citySelected: _citySelected,
+                              MainWeatherInfo(
+                                city: _citySelected.city,
+                                iconName: _current.weather.first.icon,
+                                currentTemp: _current.temp,
+                                feelsLikeTemp: _current.feelsLike,
                               ),
                               _ExtraDetailSection(detailsResponse: _weatherDetailsResponse),
                               _ForeCastDetailSection(detailsResponse: _weatherDetailsResponse),
@@ -132,67 +136,6 @@ class _WeatherDetailsPageState extends State<WeatherDetailsPage> {
   }
 }
 
-class _CityWeatherDetails extends StatelessWidget {
-  final I18nService _i18nService;
-  final Hourly current;
-  final City citySelected;
-
-  _CityWeatherDetails({
-    Key? key,
-    required this.current,
-    required this.citySelected,
-  })  : _i18nService = getIt.get(),
-        super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return BlocBuilder<ThemeCubit, ThemeState>(
-      builder: (context, themeState) {
-        final _textTheme = themeState.themeData.textTheme;
-        final _colorTheme = themeState.colorTheme;
-
-        return Container(
-          padding: const EdgeInsets.symmetric(vertical: spaceLarge),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Text(
-                citySelected.city,
-                style: _textTheme.headline3!.copyWith(
-                  color: _colorTheme.onSurfaceColor,
-                ),
-              ),
-              Image.network(
-                '$openWeatherIconBaseUrl${current.weather.first.icon}.png',
-                scale: 0.5,
-              ),
-              Padding(
-                padding: const EdgeInsets.symmetric(vertical: spaceMid),
-                child: Text(
-                  _i18nService.translate(context, 'temperature', translationParams: {
-                    'temperature': current.temp.toString(),
-                  }),
-                  style: _textTheme.headline1!.copyWith(
-                    color: _colorTheme.onSurfaceColor,
-                  ),
-                ),
-              ),
-              Text(
-                _i18nService.translate(context, 'feel_like', translationParams: {
-                  'temperature': current.feelsLike.toString(),
-                }),
-                style: _textTheme.subtitle2!.copyWith(
-                  color: _colorTheme.onSurfaceColor,
-                ),
-              ),
-            ],
-          ),
-        );
-      },
-    );
-  }
-}
-
 class _ExtraDetailSection extends StatelessWidget {
   final WeatherDetailsResponse detailsResponse;
 
@@ -206,100 +149,22 @@ class _ExtraDetailSection extends StatelessWidget {
     final _summary = detailsResponse.current.weather.first;
     final _hourly = detailsResponse.hourly;
 
-    return BlocBuilder<ThemeCubit, ThemeState>(
-      builder: (context, themeState) {
-        final _textTheme = themeState.themeData.textTheme;
-        final _colorTheme = themeState.colorTheme;
-
-        return Card(
-          margin: const EdgeInsets.fromLTRB(screenBoundingSpace, screenBoundingSpace, screenBoundingSpace, 0.0),
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: spaceLarge),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Padding(
-                  padding: const EdgeInsets.symmetric(vertical: spaceXMid),
-                  child: Text(
-                    _summary.combineDesc,
-                    style: _textTheme.bodyText1!.copyWith(
-                      color: _colorTheme.onSurfaceColor,
-                    ),
-                  ),
-                ),
-                Divider(color: _colorTheme.onSurfaceColor),
-                Padding(
-                  padding: const EdgeInsets.symmetric(vertical: spaceXMid),
-                  child: SingleChildScrollView(
-                    scrollDirection: Axis.horizontal,
-                    child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: _hourly
-                          .map(
-                            (hour) => _HourTemp(hourly: hour),
-                          )
-                          .toList(),
-                    ),
-                  ),
-                ),
-              ],
-            ),
+    return Padding(
+      padding: const EdgeInsets.only(top: spaceLarge),
+      child: PrimaryCard(
+        title: _summary.combineDesc,
+        child: SingleChildScrollView(
+          scrollDirection: Axis.horizontal,
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: _hourly
+                .map(
+                  (hour) => HourlyInfoWidget(hourly: hour),
+                )
+                .toList(),
           ),
-        );
-      },
-    );
-  }
-}
-
-class _HourTemp extends StatelessWidget {
-  final I18nService _i18nService;
-
-  final Hourly hourly;
-
-  _HourTemp({
-    Key? key,
-    required this.hourly,
-  })  : _i18nService = getIt.get(),
-        super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return BlocBuilder<ThemeCubit, ThemeState>(
-      builder: (context, themeState) {
-        final _textTheme = themeState.themeData.textTheme;
-        final _colorTheme = themeState.colorTheme;
-
-        return Padding(
-          padding: const EdgeInsets.only(right: spaceXMid),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Text(
-                DateFormat('hh:mma').format(hourly.dateTime),
-                style: _textTheme.caption!.copyWith(
-                  color: _colorTheme.onSurfaceColor,
-                ),
-              ),
-              Image.network(
-                '$openWeatherIconBaseUrl${hourly.weather.first.icon}.png',
-              ),
-              Text(
-                _i18nService.translate(
-                  context,
-                  'temperature',
-                  translationParams: {
-                    'temperature': hourly.temp.toString(),
-                  },
-                ),
-                style: _textTheme.caption!.copyWith(
-                  color: _colorTheme.onSurfaceColor,
-                ),
-              ),
-            ],
-          ),
-        );
-      },
+        ),
+      ),
     );
   }
 }
@@ -319,84 +184,39 @@ class _ForeCastDetailSection extends StatelessWidget {
   Widget build(BuildContext context) {
     final _daily = detailsResponse.daily;
 
-    return BlocBuilder<ThemeCubit, ThemeState>(
-      builder: (context, themeState) {
-        final _textTheme = themeState.themeData.textTheme;
-        final _colorTheme = themeState.colorTheme;
+    return Padding(
+      padding: const EdgeInsets.only(top: spaceLarge),
+      child: PrimaryCard(
+        title: _i18nService.translate(context, 'next_7_day_forecast'),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: _daily.getRange(1, _daily.length).map(
+            (daily) {
+              final _min = _i18nService.translate(
+                context,
+                'temperature',
+                translationParams: {
+                  'temperature': daily.temp.min.toString(),
+                },
+              );
 
-        return Container(
-          margin: const EdgeInsets.only(top: spaceLarge),
-          child: Card(
-            margin: const EdgeInsets.fromLTRB(screenBoundingSpace, screenBoundingSpace, screenBoundingSpace, 0.0),
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: spaceLarge),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.symmetric(vertical: spaceXMid),
-                    child: Text(
-                      _i18nService.translate(context, 'next_7_day_forecast'),
-                      style: _textTheme.subtitle1!.copyWith(
-                        color: _colorTheme.onSurfaceColor,
-                      ),
-                    ),
-                  ),
-                  Divider(color: _colorTheme.onSurfaceColor),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(vertical: spaceXMid),
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: _daily.getRange(1, _daily.length).map(
-                        (daily) {
-                          final _min = _i18nService.translate(
-                            context,
-                            'temperature',
-                            translationParams: {
-                              'temperature': daily.temp.min.toString(),
-                            },
-                          );
+              final _max = _i18nService.translate(
+                context,
+                'temperature',
+                translationParams: {
+                  'temperature': daily.temp.max.toString(),
+                },
+              );
 
-                          final _max = _i18nService.translate(
-                            context,
-                            'temperature',
-                            translationParams: {
-                              'temperature': daily.temp.max.toString(),
-                            },
-                          );
-
-                          return Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Row(
-                              children: [
-                                Expanded(
-                                  child: Text(
-                                    DateFormat('dd MMM yyyy').format(daily.dateTime),
-                                    style: _textTheme.subtitle2!.copyWith(
-                                      color: _colorTheme.onSurfaceColor,
-                                    ),
-                                  ),
-                                ),
-                                Text(
-                                  '$_min - $_max',
-                                  style: _textTheme.subtitle2!.copyWith(
-                                    color: _colorTheme.onSurfaceColor,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          );
-                        },
-                      ).toList(),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ),
-        );
-      },
+              return CardInfoItem(
+                label: DateFormat('dd MMM yyyy').format(daily.dateTime),
+                info: '$_min - $_max',
+              );
+            },
+          ).toList(),
+        ),
+      ),
     );
   }
 }

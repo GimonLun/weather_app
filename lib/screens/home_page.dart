@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:weather_app/cubits/commons/theme/theme_cubit.dart';
-import 'package:weather_app/service_locator.dart';
-import 'package:weather_app/services/i18n_service.dart';
 
 class HomePage extends StatefulWidget {
   static const routeName = 'home_page';
