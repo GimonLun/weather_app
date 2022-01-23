@@ -49,7 +49,7 @@ class LocationLoaded extends LocationState {
   const LocationLoaded({
     required bool serviceEnabled,
     required bool permissionGranted,
-    required LocationData? locationData,
+    required LocationData locationData,
   }) : super(
           serviceEnabled: serviceEnabled,
           permissionGranted: permissionGranted,
