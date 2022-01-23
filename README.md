@@ -9,6 +9,15 @@ Engine • revision 40a99c5951
 Tools • Dart 2.15.0
 ```
 
+## Development
+
+1. Clone this project
+2. Run `flutter packages pub run build_runner build --delete-conflicting-outputs`
+3. Run tab to run the App
+   1. VsCode can refer this ![alt example image](./demo/run_app_vscode.png)
+      - `Main App`: run the App
+      - `All Test`: run all test inside the test folder
+
 ---
 
 ## App Features

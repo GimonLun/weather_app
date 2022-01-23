@@ -2,7 +2,7 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "Run Main App",
+            "name": "Main App",
             "type": "dart",
             "request": "launch",
             "program": "lib/main.dart",
