@@ -92,9 +92,9 @@ class _WeatherDetailsPageState extends State<WeatherDetailsPage> {
         return Scaffold(
           body: Container(
             height: MediaQuery.of(context).size.height,
-            decoration: const BoxDecoration(
+            decoration: BoxDecoration(
               image: DecorationImage(
-                image: AssetImage("assets/images/bg_1.jpg"),
+                image: AssetImage(themeState.bgImg),
                 fit: BoxFit.cover,
               ),
             ),

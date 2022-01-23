@@ -3,10 +3,12 @@ part of 'theme_cubit.dart';
 abstract class ThemeState extends Equatable {
   final ColorTheme colorTheme;
   final ThemeData themeData;
+  final String bgImg;
 
   const ThemeState({
     required this.colorTheme,
     required this.themeData,
+    required this.bgImg,
   });
 
   factory ThemeState.initial() {
@@ -24,6 +26,7 @@ class DefaultThemeState extends ThemeState {
   }) : super(
           themeData: themeData,
           colorTheme: colorTheme,
+          bgImg: 'assets/images/bg_1.jpg',
         );
 
   factory DefaultThemeState.initial() {
@@ -52,6 +55,48 @@ class DefaultThemeState extends ThemeState {
     );
 
     return DefaultThemeState._(
+      colorTheme: colorTheme,
+      themeData: themeData,
+    );
+  }
+
+  @override
+  List<Object> get props => super.props..addAll([]);
+}
+
+class DarkThemeState extends ThemeState {
+  const DarkThemeState._({
+    required ColorTheme colorTheme,
+    required ThemeData themeData,
+  }) : super(
+          themeData: themeData,
+          colorTheme: colorTheme,
+          bgImg: 'assets/images/bg_2.jpg',
+        );
+
+  factory DarkThemeState.initial() {
+    const colorTheme = ColorTheme(
+      primaryColor: Color(0xFFE69A5D),
+      primaryVariantColor: Color(0xFFE69A5D),
+      secondaryColor: Color(0xFFF4F4F4),
+      secondaryVariantColor: Color(0xFFFFEFEF),
+      surfaceColor: Colors.black,
+      backgroundColor: Colors.black,
+      errorColor: Colors.red,
+      onPrimaryColor: Colors.white,
+      onSecondaryColor: Colors.black,
+      onSurfaceColor: Colors.white,
+      onBackgroundColor: Colors.white,
+      onErrorColor: Colors.white,
+      secondaryBackgroundColor: Color(0xFFFDF8EF),
+      onSecondaryBackgroundColor: Colors.white,
+    );
+
+    final textTheme = _createTextThemeFromTemplate(colorTheme);
+
+    final themeData = _createThemeDataFromTemplate(colorTheme: colorTheme, textTheme: textTheme);
+
+    return DarkThemeState._(
       colorTheme: colorTheme,
       themeData: themeData,
     );

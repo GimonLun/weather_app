@@ -23,6 +23,9 @@ class CardInfoItem extends StatelessWidget {
       builder: (context, themeState) {
         final _textTheme = themeState.themeData.textTheme;
         final _colorTheme = themeState.colorTheme;
+        final _subtitle1 = _textTheme.subtitle1!.copyWith(
+          color: _colorTheme.onSurfaceColor,
+        );
 
         return InkWell(
           onTap: onTap,
@@ -31,22 +34,11 @@ class CardInfoItem extends StatelessWidget {
             child: Row(
               children: [
                 Expanded(
-                  child: Text(
-                    label,
-                    style: _textTheme.subtitle2!.copyWith(
-                      color: _colorTheme.onSurfaceColor,
-                    ),
-                  ),
+                  child: Text(label, style: _subtitle1),
                 ),
                 Row(
                   children: [
-                    if (info != null)
-                      Text(
-                        info!,
-                        style: _textTheme.subtitle2!.copyWith(
-                          color: _colorTheme.onSurfaceColor,
-                        ),
-                      ),
+                    if (info != null) Text(info!, style: _subtitle1),
                     if (showArrow)
                       Icon(
                         Icons.navigate_next,

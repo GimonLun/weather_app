@@ -18,4 +18,8 @@ class ThemeCubit extends Cubit<ThemeState> {
 
     return ThemeCubit._();
   }
+
+  void changeTheme() {
+    emit(state is DarkThemeState ? DefaultThemeState.initial() : DarkThemeState.initial());
+  }
 }
