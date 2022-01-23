@@ -35,11 +35,7 @@ class LanguageCubit extends Cubit<LanguageState> {
   }
 
   Future<void> changeLanguage({required Language language}) async {
-    try {
-      await _settingBox.put(settingLanguageKey, language);
-    } catch (e) {
-      Logger().e(e);
-    }
+    await _settingBox.put(settingLanguageKey, language);
     emit(LanguageChangeSuccess(currentLanguage: language));
   }
 }
