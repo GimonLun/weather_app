@@ -2,10 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 import 'package:weather_app/constants/dimen_constants.dart';
-import 'package:weather_app/constants/misc_constants.dart';
-import 'package:weather_app/cubits/city/city_list_cubit.dart';
 import 'package:weather_app/cubits/commons/log/log_cubit.dart';
-import 'package:weather_app/data/enums_extensions/enums.dart';
 import 'package:weather_app/service_locator.dart';
 import 'package:weather_app/services/i18n_service.dart';
 
