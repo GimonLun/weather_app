@@ -14,9 +14,12 @@ import 'package:weather_app/service_locator.dart';
 import 'package:weather_app/services/i18n_service.dart';
 
 class WeatherDetailsArg {
-  final City citySelected;
+  final City? citySelected;
+  final WeatherDetailsResponse? weatherDetailsResponse;
 
-  const WeatherDetailsArg({required this.citySelected});
+  const WeatherDetailsArg({this.citySelected, this.weatherDetailsResponse})
+      : assert(citySelected != null || weatherDetailsResponse != null,
+            'Either city or weather details response must be passed in');
 }
 
 class WeatherDetailsPage extends StatefulWidget {
@@ -33,7 +36,7 @@ class WeatherDetailsPage extends StatefulWidget {
 class _WeatherDetailsPageState extends State<WeatherDetailsPage> {
   late I18nService _i18nService;
 
-  late City _citySelected;
+  late String _cityName;
 
   late WeatherDetailsCubit _weatherDetailsCubit;
 
@@ -43,13 +46,27 @@ class _WeatherDetailsPageState extends State<WeatherDetailsPage> {
 
     _i18nService = getIt.get();
 
-    _citySelected = widget.args.citySelected;
+    final _args = widget.args;
 
-    _weatherDetailsCubit = WeatherDetailsCubit.initial();
-    _weatherDetailsCubit.loadWeatherDetails(
-      lat: _citySelected.lat,
-      lng: _citySelected.lng,
+    final _citySelected = _args.citySelected;
+    final _weatherDetailsResponse = _args.weatherDetailsResponse;
+
+    final _isResponseLoaded = _weatherDetailsResponse != null;
+
+    _weatherDetailsCubit = WeatherDetailsCubit.initial(
+      state: _isResponseLoaded
+          ? WeatherDetailsLoaded(weatherDetailsResponse: _weatherDetailsResponse)
+          : const WeatherDetailsInitial(),
     );
+
+    if (!_isResponseLoaded && _citySelected != null) {
+      _weatherDetailsCubit.loadWeatherDetails(
+        lat: _citySelected.lat,
+        lng: _citySelected.lng,
+      );
+    }
+
+    _cityName = _citySelected?.city ?? _weatherDetailsResponse!.timezone;
   }
 
   @override
@@ -113,7 +130,7 @@ class _WeatherDetailsPageState extends State<WeatherDetailsPage> {
                             crossAxisAlignment: CrossAxisAlignment.stretch,
                             children: [
                               MainWeatherInfo(
-                                city: _citySelected.city,
+                                city: _cityName,
                                 iconName: _current.weather.first.icon,
                                 currentTemp: _current.temp,
                                 feelsLikeTemp: _current.feelsLike,
