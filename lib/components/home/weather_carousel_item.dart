@@ -41,7 +41,10 @@ class _WeatherCarouselItemState extends State<WeatherCarouselItem> {
 
     final _city = widget.city;
 
-    _weatherDetailsCubit = WeatherDetailsCubit.initial();
+    _weatherDetailsCubit = WeatherDetailsCubit.initial(
+      languageCubit: BlocProvider.of(context),
+    );
+
     _locationCubit = BlocProvider.of(context);
 
     if (_city != null) {

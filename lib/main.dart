@@ -11,9 +11,9 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:logger/logger.dart';
 import 'package:weather_app/constants/misc_constants.dart';
+import 'package:weather_app/constants/storage_key_constants.dart';
 import 'package:weather_app/cubits/city/city_list_cubit.dart';
 import 'package:weather_app/cubits/commons/languages/language_cubit.dart';
-import 'package:weather_app/cubits/commons/log/log_cubit.dart';
 import 'package:weather_app/cubits/commons/theme/theme_cubit.dart';
 import 'package:weather_app/cubits/cubits.dart';
 import 'package:weather_app/data/models/city.dart';
@@ -39,7 +39,7 @@ Future<void> main() async {
 
       _registerDependencies();
 
-      _initHive();
+      await _initHive();
 
       runApp(
         MultiBlocProvider(
@@ -81,7 +81,11 @@ Future<void> _initHive() async {
   Hive.registerAdapter(CityAdapter());
   Hive.registerAdapter(ActionTypeAdapter());
   Hive.registerAdapter(CategoryAdapter());
+  Hive.registerAdapter(LanguageAdapter());
   Hive.registerAdapter(LocalLogAdapter());
+
+  // Open this box early because needed when app launch
+  await Hive.openBox(settingBoxKey);
 }
 
 class App extends StatefulWidget {
@@ -101,6 +105,7 @@ class _AppState extends State<App> {
     _appRouter = AppRouter();
 
     BlocProvider.of<CityListCubit>(context).initCityList();
+    BlocProvider.of<LanguageCubit>(context).initAppLanguage();
   }
 
   @override

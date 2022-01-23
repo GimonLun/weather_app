@@ -30,10 +30,13 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   late HomeCubit _homeCubit;
   late LogCubit _logCubit;
+  late LanguageCubit _languageCubit;
 
   @override
   void initState() {
     super.initState();
+
+    _languageCubit = BlocProvider.of(context);
 
     _logCubit = BlocProvider.of(context);
     _logCubit.initLogCubit();
@@ -72,14 +75,18 @@ class _HomePageState extends State<HomePage> {
                         children: [
                           BlocBuilder<LanguageCubit, LanguageState>(
                             builder: (context, languageState) {
+                              final _isCn = languageState.currentLanguage == Language.cn;
+
                               return TextButton(
                                 child: Text(
-                                  languageState.currentLanguage == Language.cn ? 'en' : 'cn',
+                                  _isCn ? 'en' : 'cn',
                                   style: _textTheme.headline6!.copyWith(
                                     color: _colorTheme.onSurfaceColor,
                                   ),
                                 ),
-                                onPressed: () {},
+                                onPressed: () {
+                                  _languageCubit.changeLanguage(language: _isCn ? Language.en : Language.cn);
+                                },
                               );
                             },
                           ),

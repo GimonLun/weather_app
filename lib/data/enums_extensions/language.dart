@@ -1,6 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 
-enum Language { en, cn }
+part 'language.g.dart';
+
+@HiveType(typeId: 103)
+enum Language {
+  @HiveField(0)
+  en,
+
+  @HiveField(1)
+  cn
+}
 
 extension LanguageExtension on Language {
   Locale get locale {
@@ -12,12 +22,12 @@ extension LanguageExtension on Language {
     }
   }
 
-  String get displayName {
+  String get shortName {
     switch (this) {
       case Language.cn:
-        return 'chinese';
+        return 'zh';
       default:
-        return 'english';
+        return 'en';
     }
   }
 }

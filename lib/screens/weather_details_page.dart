@@ -57,6 +57,7 @@ class _WeatherDetailsPageState extends State<WeatherDetailsPage> {
     final _isResponseLoaded = _weatherDetailsResponse != null;
 
     _weatherDetailsCubit = WeatherDetailsCubit.initial(
+      languageCubit: BlocProvider.of(context),
       state: _isResponseLoaded
           ? WeatherDetailsLoaded(weatherDetailsResponse: _weatherDetailsResponse)
           : const WeatherDetailsInitial(),
