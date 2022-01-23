@@ -4,12 +4,16 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:weather_app/components/card/primary_card.dart';
 import 'package:weather_app/constants/dimen_constants.dart';
 import 'package:weather_app/cubits/commons/theme/theme_cubit.dart';
+import 'package:weather_app/cubits/home/home_cubit.dart';
+import 'package:weather_app/data/models/city.dart';
 import 'package:weather_app/screens/city_list_page.dart';
 import 'package:weather_app/service_locator.dart';
 import 'package:weather_app/services/i18n_service.dart';
 
 class AddCityCard extends StatefulWidget {
-  const AddCityCard({Key? key}) : super(key: key);
+  final HomeCubit homeCubit;
+
+  const AddCityCard({Key? key, required this.homeCubit}) : super(key: key);
 
   @override
   _AddCityCardState createState() => _AddCityCardState();
@@ -23,6 +27,14 @@ class _AddCityCardState extends State<AddCityCard> {
     super.initState();
 
     _i18nService = getIt.get();
+  }
+
+  Future<void> _addCity() async {
+    final _city = await Navigator.of(context).pushNamed(CityListPage.routeName);
+
+    if (_city != null && _city is City) {
+      widget.homeCubit.addCityToHome(_city);
+    }
   }
 
   @override
@@ -42,9 +54,7 @@ class _AddCityCardState extends State<AddCityCard> {
                 constraints: const BoxConstraints.tightFor(width: iconSizeLarge, height: iconSizeLarge),
                 child: FittedBox(
                   child: ElevatedButton(
-                    onPressed: () {
-                      Navigator.of(context).pushNamed(CityListPage.routeName);
-                    },
+                    onPressed: _addCity,
                     style: ElevatedButton.styleFrom(
                       shape: const CircleBorder(),
                       primary: _colorTheme.onSurfaceColor,

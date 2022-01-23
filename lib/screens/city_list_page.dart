@@ -54,7 +54,7 @@ class _CityListPageState extends State<CityListPage> {
               return ListTile(
                 title: Text(_item.city),
                 onTap: () {
-                  Navigator.of(context).pop(_item.city);
+                  Navigator.of(context).pop(_item);
                 },
               );
             },

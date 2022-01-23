@@ -6,12 +6,20 @@ import 'package:weather_app/constants/dimen_constants.dart';
 import 'package:weather_app/cubits/commons/location/location_cubit.dart';
 import 'package:weather_app/cubits/commons/theme/theme_cubit.dart';
 import 'package:weather_app/cubits/weather/weather_details_cubit.dart';
+import 'package:weather_app/data/models/city.dart';
 import 'package:weather_app/screens/weather_details_page.dart';
 import 'package:weather_app/service_locator.dart';
 import 'package:weather_app/services/i18n_service.dart';
 
 class CurrentLocationWeather extends StatefulWidget {
-  const CurrentLocationWeather({Key? key}) : super(key: key);
+  final String title;
+  final City? city;
+
+  const CurrentLocationWeather({
+    Key? key,
+    this.city,
+    required this.title,
+  }) : super(key: key);
 
   @override
   _CurrentLocationWeatherState createState() => _CurrentLocationWeatherState();
@@ -23,24 +31,36 @@ class _CurrentLocationWeatherState extends State<CurrentLocationWeather> {
   late LocationCubit _locationCubit;
   late WeatherDetailsCubit _weatherDetailsCubit;
 
+  late City? _city;
+
   @override
   void initState() {
     super.initState();
 
     _i18nService = getIt.get();
 
-    _locationCubit = BlocProvider.of(context);
-    _locationCubit.getUserLocation();
+    _city = widget.city;
 
     _weatherDetailsCubit = WeatherDetailsCubit.initial();
-    if (_locationCubit.allPermissionEnabled && _locationCubit.state is LocationLoaded) {
-      final _locationState = _locationCubit.state as LocationLoaded;
-      final _locationData = _locationState.locationData!;
+    _locationCubit = BlocProvider.of(context);
 
+    if (_city != null) {
       _weatherDetailsCubit.loadWeatherDetails(
-        lat: _locationData.latitude!,
-        lng: _locationData.longitude!,
+        lat: _city!.lat,
+        lng: _city!.lng,
       );
+    } else {
+      _locationCubit.getUserLocation();
+
+      if (_locationCubit.allPermissionEnabled && _locationCubit.state is LocationLoaded) {
+        final _locationState = _locationCubit.state as LocationLoaded;
+        final _locationData = _locationState.locationData!;
+
+        _weatherDetailsCubit.loadWeatherDetails(
+          lat: _locationData.latitude!,
+          lng: _locationData.longitude!,
+        );
+      }
     }
   }
 
@@ -70,7 +90,7 @@ class _CurrentLocationWeatherState extends State<CurrentLocationWeather> {
             padding: const EdgeInsets.only(top: spaceLarge),
             child: PrimaryCard(
               margin: EdgeInsets.zero,
-              title: _i18nService.translate(context, 'current_location_weather'),
+              title: widget.title,
               child: BlocBuilder<WeatherDetailsCubit, WeatherDetailsState>(
                 bloc: _weatherDetailsCubit,
                 builder: (context, weatherDetailsState) {
@@ -84,6 +104,7 @@ class _CurrentLocationWeatherState extends State<CurrentLocationWeather> {
                               WeatherDetailsPage.routeName,
                               arguments: WeatherDetailsArg(
                                 weatherDetailsResponse: _weatherDetailsResponse,
+                                citySelected: _city,
                               ),
                             );
                           }
@@ -92,13 +113,24 @@ class _CurrentLocationWeatherState extends State<CurrentLocationWeather> {
                       builder: (context, locationState) {
                         if (_isDetailsLoaded) {
                           final _current = _weatherDetailsResponse!.current;
+                          final _weather = _current.weather;
 
                           return MainWeatherInfo(
                             containerHeight: homePageCardContentHeight,
-                            city: _weatherDetailsResponse.timezone,
-                            iconName: _current.weather.first.icon,
+                            city: _weather.first.combineDesc,
+                            iconName: _weather.first.icon,
                             currentTemp: _current.temp,
                             feelsLikeTemp: _current.feelsLike,
+                          );
+                        }
+
+                        if (weatherDetailsState is WeatherDetailsLoadFailed) {
+                          return Text(
+                            _i18nService.translate(
+                              context,
+                              'weather_load_failed',
+                            ),
+                            style: _subtitle2,
                           );
                         }
 
@@ -120,16 +152,6 @@ class _CurrentLocationWeatherState extends State<CurrentLocationWeather> {
                                     locationState.errorMsg,
                                   )
                                 : locationState.errorMsg,
-                            style: _subtitle2,
-                          );
-                        }
-
-                        if (weatherDetailsState is WeatherDetailsLoadFailed) {
-                          return Text(
-                            _i18nService.translate(
-                              context,
-                              'weather_load_failed',
-                            ),
                             style: _subtitle2,
                           );
                         }
