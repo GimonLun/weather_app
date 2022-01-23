@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:weather_app/components/card/primary_card.dart';
 import 'package:weather_app/components/weather_details/main_weather_info.dart';
 import 'package:weather_app/constants/dimen_constants.dart';
@@ -52,25 +53,21 @@ class _WeatherCarouselItemState extends State<WeatherCarouselItem> {
         lat: _city.lat,
         lng: _city.lng,
       );
-    } else {
-      _locationCubit.getUserLocation();
+    } else if (_locationCubit.allPermissionEnabled && _locationCubit.state is LocationLoaded) {
+      final _locationState = _locationCubit.state as LocationLoaded;
+      final _locationData = _locationState.locationData!;
 
-      if (_locationCubit.allPermissionEnabled && _locationCubit.state is LocationLoaded) {
-        final _locationState = _locationCubit.state as LocationLoaded;
-        final _locationData = _locationState.locationData!;
-
-        _weatherDetailsCubit.loadWeatherDetails(
-          lat: _locationData.latitude!,
-          lng: _locationData.longitude!,
-        );
-      }
+      _weatherDetailsCubit.loadWeatherDetails(
+        lat: _locationData.latitude!,
+        lng: _locationData.longitude!,
+      );
     }
   }
 
   @override
   Widget build(BuildContext context) {
     return BlocListener<LocationCubit, LocationState>(
-      listener: (context, locationState) {
+      listener: (context, locationState) async {
         final _locationState = _locationCubit.state;
 
         if (_locationState is LocationLoaded && _locationState.locationData != null) {
@@ -149,14 +146,36 @@ class _WeatherCarouselItemState extends State<WeatherCarouselItem> {
                         }
 
                         if (locationState is LocationError) {
-                          return Text(
-                            locationState.errorNeedTranslate
-                                ? _i18nService.translate(
-                                    context,
-                                    locationState.errorMsg,
-                                  )
-                                : locationState.errorMsg,
-                            style: _subtitle2,
+                          var _showOpenSettingsButton = false;
+
+                          final _locationPermission = locationState.permissionStatus;
+
+                          _showOpenSettingsButton = _locationPermission == PermissionStatus.denied;
+
+                          return Column(
+                            children: [
+                              Text(
+                                locationState.errorNeedTranslate
+                                    ? _i18nService.translate(
+                                        context,
+                                        locationState.errorMsg,
+                                      )
+                                    : locationState.errorMsg,
+                                style: _subtitle2,
+                              ),
+                              if (_showOpenSettingsButton)
+                                TextButton(
+                                  child: Text(
+                                    _i18nService.translate(
+                                      context,
+                                      'permissions.open_app_settings',
+                                    ),
+                                  ),
+                                  onPressed: () async {
+                                    await openAppSettings();
+                                  },
+                                )
+                            ],
                           );
                         }
 
