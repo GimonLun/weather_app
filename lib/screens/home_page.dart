@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:weather_app/components/card/card_info_item.dart';
 import 'package:weather_app/components/card/primary_card.dart';
+import 'package:weather_app/components/home/add_city_card.dart';
 import 'package:weather_app/components/home/current_location_weather.dart';
 import 'package:weather_app/constants/dimen_constants.dart';
 import 'package:weather_app/cubits/city/city_list_cubit.dart';
@@ -75,9 +76,16 @@ class _CardSection extends StatelessWidget {
     return CarouselSlider.builder(
       itemBuilder: (context, index, realIndex) => LayoutBuilder(
         builder: (context, constraints) {
-          return const Padding(
-            padding: EdgeInsets.symmetric(horizontal: spaceMid),
-            child: CurrentLocationWeather(),
+          return Padding(
+            padding: const EdgeInsets.symmetric(horizontal: spaceMid),
+            child: Builder(
+              builder: (context) {
+                if (index == 0) {
+                  return const CurrentLocationWeather();
+                }
+                return const AddCityCard();
+              },
+            ),
           );
         },
       ),

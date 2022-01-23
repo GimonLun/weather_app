@@ -29,18 +29,27 @@ class PrimaryCard extends StatelessWidget {
             padding: const EdgeInsets.symmetric(horizontal: spaceLarge),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
+              mainAxisAlignment: MainAxisAlignment.start,
               children: [
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.symmetric(vertical: spaceXMid),
+                      child: Text(
+                        title,
+                        style: _textTheme.subtitle1!.copyWith(
+                          color: _colorTheme.onSurfaceColor,
+                        ),
+                      ),
+                    ),
+                    Divider(color: _colorTheme.onSurfaceColor),
+                  ],
+                ),
                 Padding(
                   padding: const EdgeInsets.symmetric(vertical: spaceXMid),
-                  child: Text(
-                    title,
-                    style: _textTheme.subtitle1!.copyWith(
-                      color: _colorTheme.onSurfaceColor,
-                    ),
-                  ),
+                  child: child,
                 ),
-                Divider(color: _colorTheme.onSurfaceColor),
-                Padding(padding: const EdgeInsets.symmetric(vertical: spaceXMid), child: child),
               ],
             ),
           ),

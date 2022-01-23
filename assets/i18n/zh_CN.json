@@ -1,4 +1,5 @@
 {
+    "add_city": "加上城市",
     "current_location_weather": "当前的位置天气",
     "feel_like": "感觉像{temperature}°C",
     "get_current_location_weather": "获取当前的位置天气",

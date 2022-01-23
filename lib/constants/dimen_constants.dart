@@ -19,6 +19,7 @@ const double screenBoundingSpace = 20.0;
 
 //icon related
 const double defaultIconSize = 20.0;
+const double iconSizeLarge = 30.0;
 
 //divider themedata
 const double defaultDividerSpace = 2.0;
