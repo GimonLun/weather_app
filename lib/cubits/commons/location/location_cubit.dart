@@ -40,10 +40,11 @@ class LocationCubit extends Cubit<LocationState> {
     if (!locationServiceEnabled) {
       emit(
         LocationError(
-            serviceEnabled: locationServiceEnabled,
-            permissionGranted: state.permissionGranted,
-            locationData: state.locationData,
-            errorMsg: 'location_service_disabled_error'),
+          serviceEnabled: locationServiceEnabled,
+          permissionGranted: state.permissionGranted,
+          locationData: state.locationData,
+          errorMsg: 'location_service_disabled_error',
+        ),
       );
 
       return;
@@ -53,10 +54,11 @@ class LocationCubit extends Cubit<LocationState> {
     if (!permissionGranted) {
       emit(
         LocationError(
-            serviceEnabled: state.serviceEnabled,
-            permissionGranted: permissionGranted,
-            locationData: state.locationData,
-            errorMsg: 'location_permission_denied_error'),
+          serviceEnabled: state.serviceEnabled,
+          permissionGranted: permissionGranted,
+          locationData: state.locationData,
+          errorMsg: 'location_permission_denied_error',
+        ),
       );
 
       return;
