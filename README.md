@@ -80,7 +80,7 @@ Tools • Dart 2.15.0
 
 6. **Minor problem**
     Due to the time pressure, so I won't able to fineture everything. Eg.
-    1. Some UI maybe can be more dynamic
+    1. Some UI maybe can be more dynamic and more beautiful
     2. Api Key should not commit into git
     3. Global error handler
 
