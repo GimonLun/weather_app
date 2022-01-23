@@ -7,8 +7,10 @@ import 'package:weather_app/components/home/add_city_card.dart';
 import 'package:weather_app/components/home/weather_carousel_item.dart';
 import 'package:weather_app/constants/dimen_constants.dart';
 import 'package:weather_app/cubits/city/city_list_cubit.dart';
+import 'package:weather_app/cubits/commons/languages/language_cubit.dart';
 import 'package:weather_app/cubits/commons/theme/theme_cubit.dart';
 import 'package:weather_app/cubits/home/home_cubit.dart';
+import 'package:weather_app/data/enums_extensions/enums.dart';
 import 'package:weather_app/screens/weather_details_page.dart';
 import 'package:weather_app/service_locator.dart';
 import 'package:weather_app/services/i18n_service.dart';
@@ -38,6 +40,7 @@ class _HomePageState extends State<HomePage> {
     return Scaffold(
       body: BlocBuilder<ThemeCubit, ThemeState>(
         builder: (context, themeState) {
+          final _textTheme = themeState.themeData.textTheme;
           final _colorTheme = themeState.colorTheme;
 
           return Container(
@@ -51,20 +54,42 @@ class _HomePageState extends State<HomePage> {
             ),
             child: SingleChildScrollView(
               child: SafeArea(
-                child: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
-                  Align(
-                    alignment: Alignment.centerRight,
-                    child: IconButton(
-                      onPressed: () {},
-                      icon: Icon(
-                        Icons.settings,
-                        color: _colorTheme.onSurfaceColor,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: screenBoundingSpace),
+                      child: Row(
+                        mainAxisSize: MainAxisSize.max,
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          BlocBuilder<LanguageCubit, LanguageState>(
+                            builder: (context, languageState) {
+                              return TextButton(
+                                child: Text(
+                                  languageState.currentLanguage == Language.cn ? 'en' : 'cn',
+                                  style: _textTheme.headline6!.copyWith(
+                                    color: _colorTheme.onSurfaceColor,
+                                  ),
+                                ),
+                                onPressed: () {},
+                              );
+                            },
+                          ),
+                          IconButton(
+                            onPressed: () {},
+                            icon: Icon(
+                              Icons.history,
+                              color: _colorTheme.onSurfaceColor,
+                            ),
+                          ),
+                        ],
                       ),
                     ),
-                  ),
-                  _CardSection(homeCubit: _homeCubit),
-                  _CityListSection(),
-                ]),
+                    _CardSection(homeCubit: _homeCubit),
+                    _CityListSection(),
+                  ],
+                ),
               ),
             ),
           );

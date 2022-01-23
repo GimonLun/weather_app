@@ -1,7 +1,6 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hive_flutter/hive_flutter.dart';
-import 'package:logger/logger.dart';
 import 'package:weather_app/constants/storage_key_constants.dart';
 import 'package:weather_app/data/models/city.dart';
 import 'package:weather_app/service_locator.dart';
