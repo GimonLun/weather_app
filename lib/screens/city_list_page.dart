@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:weather_app/constants/misc_constants.dart';
 import 'package:weather_app/cubits/city/city_list_cubit.dart';
+import 'package:weather_app/cubits/commons/log/log_cubit.dart';
+import 'package:weather_app/data/enums_extensions/enums.dart';
 import 'package:weather_app/service_locator.dart';
 import 'package:weather_app/services/i18n_service.dart';
 
@@ -14,6 +17,8 @@ class CityListPage extends StatefulWidget {
 }
 
 class _CityListPageState extends State<CityListPage> {
+  late LogCubit _logCubit;
+
   late I18nService _i18nService;
 
   @override
@@ -21,6 +26,8 @@ class _CityListPageState extends State<CityListPage> {
     super.initState();
 
     _i18nService = getIt.get();
+
+    _logCubit = BlocProvider.of<LogCubit>(context);
   }
 
   @override
@@ -54,6 +61,13 @@ class _CityListPageState extends State<CityListPage> {
               return ListTile(
                 title: Text(_item.city),
                 onTap: () {
+                  _logCubit.logEvent(
+                    actionType: ActionType.create,
+                    category: Category.city,
+                    pageName: homePageCarousell,
+                    data: _item.city.toString(),
+                  );
+
                   Navigator.of(context).pop(_item);
                 },
               );

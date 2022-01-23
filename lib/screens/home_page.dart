@@ -6,8 +6,10 @@ import 'package:weather_app/components/card/primary_card.dart';
 import 'package:weather_app/components/home/add_city_card.dart';
 import 'package:weather_app/components/home/weather_carousel_item.dart';
 import 'package:weather_app/constants/dimen_constants.dart';
+import 'package:weather_app/constants/misc_constants.dart';
 import 'package:weather_app/cubits/city/city_list_cubit.dart';
 import 'package:weather_app/cubits/commons/languages/language_cubit.dart';
+import 'package:weather_app/cubits/commons/log/log_cubit.dart';
 import 'package:weather_app/cubits/commons/theme/theme_cubit.dart';
 import 'package:weather_app/cubits/home/home_cubit.dart';
 import 'package:weather_app/data/enums_extensions/enums.dart';
@@ -26,10 +28,13 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   late HomeCubit _homeCubit;
+  late LogCubit _logCubit;
 
   @override
   void initState() {
     super.initState();
+
+    _logCubit = BlocProvider.of(context);
 
     _homeCubit = HomeCubit.initial();
     _homeCubit.initHomeCubit();
@@ -86,7 +91,10 @@ class _HomePageState extends State<HomePage> {
                         ],
                       ),
                     ),
-                    _CardSection(homeCubit: _homeCubit),
+                    _CardSection(
+                      homeCubit: _homeCubit,
+                      logCubit: _logCubit,
+                    ),
                     _CityListSection(),
                   ],
                 ),
@@ -101,11 +109,13 @@ class _HomePageState extends State<HomePage> {
 
 class _CardSection extends StatelessWidget {
   final HomeCubit homeCubit;
+  final LogCubit logCubit;
   final I18nService _i18nService;
 
   _CardSection({
     Key? key,
     required this.homeCubit,
+    required this.logCubit,
   })  : _i18nService = getIt.get(),
         super(key: key);
 
@@ -149,7 +159,16 @@ class _CardSection extends StatelessWidget {
                                 color: _colorTheme.onSurfaceColor,
                               ),
                             ),
-                            onTap: () => homeCubit.removeCityFromHome(_city),
+                            onTap: () {
+                              logCubit.logEvent(
+                                actionType: ActionType.delete,
+                                category: Category.city,
+                                pageName: homePageCarousell,
+                                data: _city.toString(),
+                              );
+
+                              homeCubit.removeCityFromHome(_city);
+                            },
                           ),
                           city: _city,
                         );
